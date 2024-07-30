@@ -88,13 +88,9 @@ describe('UsersController', () => {
     jest.spyOn(service, 'create').mockImplementation(async () => {
       throw new ConflictException('Email already exists');
     });
-    expect.assertions(2);
-    try {
-      await controller.create(createUserDto);
-    } catch (e) {
-      expect(e).toBeInstanceOf(ConflictException);
-      expect(e.message).toBe('Email already exists');
-    }
+    const respPromise = controller.create(createUserDto);
+    expect(respPromise).rejects.toBeInstanceOf(ConflictException);
+    expect(respPromise).rejects.toThrow('Email already exists');
   });
 
   it('should get an array of users', async () => {
