@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: socialnetdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://db:5432/socialnetdb
+      SONAR_JDBC_USERNAME: user
+      SONAR_JDBC_PASSWORD: password
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
