@@ -7,12 +7,14 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  CreateDateColumn,
 } from 'typeorm';
+import { Post } from '../interfaces/post';
 
 @Entity()
-export class Post {
+export class PostEntity implements Post {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Column('text')
   content: string;
@@ -20,7 +22,7 @@ export class Post {
   @Column({ nullable: true })
   image: string;
 
-  @Column()
+  @CreateDateColumn()
   createdAt: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.posts)

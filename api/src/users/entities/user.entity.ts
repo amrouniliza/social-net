@@ -1,6 +1,6 @@
 import { Friendship } from 'src/friendships/entities/friendship.entity';
 import { Like } from 'src/likes/entities/like.entity';
-import { Post } from 'src/posts/entities/post.entity';
+import { PostEntity } from 'src/posts/entities/post.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
 import {
   Entity,
@@ -10,6 +10,7 @@ import {
   ManyToMany,
   JoinTable,
   Unique,
+  CreateDateColumn,
 } from 'typeorm';
 import { Exclude, instanceToPlain } from 'class-transformer';
 import { User } from 'src/users/interfaces';
@@ -30,14 +31,14 @@ export class UserEntity implements User {
   @Column()
   password: string;
 
-  // @Column({ nullable: true })
-  // profilePicture: string;
+  @Column({ nullable: true })
+  profilePicture: string;
 
   @Column({ nullable: true })
   bio: string;
 
-  @OneToMany(() => Post, (post) => post.author)
-  posts: Post[];
+  @OneToMany(() => PostEntity, (post) => post.author)
+  posts: PostEntity[];
 
   @OneToMany(() => Comment, (comment) => comment.author)
   comments: Comment[];
@@ -54,6 +55,9 @@ export class UserEntity implements User {
 
   @OneToMany(() => Friendship, (friendship) => friendship.friend)
   friendOf: Friendship[];
+
+  @CreateDateColumn()
+  createdAt: Date;
 
   toJSON() {
     return instanceToPlain(this);

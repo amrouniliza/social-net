@@ -1,4 +1,4 @@
-import { Post } from 'src/posts/entities/post.entity';
+import { PostEntity } from 'src/posts/entities/post.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
@@ -10,6 +10,6 @@ export class Like {
   @ManyToOne(() => UserEntity, (user) => user.likes)
   user: UserEntity;
 
-  @ManyToOne(() => Post, (post) => post.likes)
-  post: Post;
+  @ManyToOne(() => PostEntity, (post) => post.likes)
+  post: PostEntity;
 }
