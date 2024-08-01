@@ -11,6 +11,7 @@ const mockUserRepository = () => ({
   save: jest.fn(),
   find: jest.fn(),
   findOneBy: jest.fn(),
+  findOneByEmail: jest.fn(),
   remove: jest.fn(),
 });
 
@@ -49,14 +50,26 @@ describe('UsersService', () => {
         password: 'password',
         bio: 'bio',
       };
-      const user = { id: '1', ...createUserDto };
+      const user = new UserEntity({ ...createUserDto });
 
       repository.existsBy.mockResolvedValue(false);
       repository.create.mockReturnValue(user);
       repository.save.mockResolvedValue(user);
 
-      expect(await service.create(createUserDto)).toEqual(user);
-      expect(repository.create).toHaveBeenCalledWith(createUserDto);
+      const result = await service.create(createUserDto);
+
+      expect(repository.existsBy).toHaveBeenCalledWith({
+        email: createUserDto.email,
+      });
+      expect(result).toBeInstanceOf(UserEntity);
+      expect(repository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          username: createUserDto.username,
+          email: createUserDto.email,
+          password: expect.any(String),
+          bio: createUserDto.bio,
+        }),
+      );
       expect(repository.save).toHaveBeenCalledWith(user);
     });
 
