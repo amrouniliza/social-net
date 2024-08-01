@@ -7,6 +7,7 @@ import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
 import { LikesModule } from './likes/likes.module';
 import { FriendshipsModule } from './friendships/friendships.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { FriendshipsModule } from './friendships/friendships.module';
       entities: [__dirname + '/**/*.entity.{ts,js}'],
       synchronize: true,
     }),
+    AuthModule,
     UsersModule,
     PostsModule,
     CommentsModule,
