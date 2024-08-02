@@ -2,10 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { AuthenticatedRequest } from './interfaces';
+import { UsersService } from 'src/users/users.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
   let authService: Partial<AuthService>;
+  let usersService: Partial<UsersService>;
 
   beforeEach(async () => {
     authService = {
@@ -14,7 +16,10 @@ describe('AuthController', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [{ provide: AuthService, useValue: authService }],
+      providers: [
+        { provide: AuthService, useValue: authService },
+        { provide: UsersService, useValue: usersService },
+      ],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
