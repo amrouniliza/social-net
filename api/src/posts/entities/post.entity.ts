@@ -13,7 +13,7 @@ import { Post } from '../interfaces/post';
 
 @Entity()
 export class PostEntity implements Post {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column('text')

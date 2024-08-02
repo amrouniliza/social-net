@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   HttpCode,
+  HttpStatus,
+  NotFoundException,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -18,22 +20,27 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto): Promise<PostEntity> {
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() createPostDto: CreatePostDto): Promise<PostEntity> {
     return this.postsService.create(createPostDto);
   }
 
   @Get()
-  findAll(): Promise<PostEntity[]> {
+  async findAll(): Promise<PostEntity[]> {
     return this.postsService.findAll();
   }
 
   @Get(':id')
-  findOneById(@Param('id') id: string): Promise<PostEntity> {
-    return this.postsService.findOneById(id);
+  async findOneById(@Param('id') id: string): Promise<PostEntity> {
+    const post = await this.postsService.findOneById(id);
+    if (!post) {
+      throw new NotFoundException(`Post with id ${id} not found`);
+    }
+    return post;
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updatePostDto: UpdatePostDto,
   ): Promise<PostEntity> {
@@ -41,8 +48,8 @@ export class PostsController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
-  remove(@Param('id') id: string): Promise<void> {
-    return this.postsService.remove(id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id') id: string): Promise<void> {
+    await this.postsService.remove(id);
   }
 }
