@@ -34,7 +34,7 @@ describe('AuthController', () => {
       const req = {
         user: { id: '1', email: 'example@test.com' },
       } as AuthenticatedRequest;
-      const result = { access_token: 'signed-jwt-token' };
+      const result = { accessToken: 'signed-jwt-token' };
       (authService.login as jest.Mock).mockResolvedValue(result);
 
       expect(await controller.login(req)).toBe(result);

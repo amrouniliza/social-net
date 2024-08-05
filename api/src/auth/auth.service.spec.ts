@@ -66,7 +66,7 @@ describe('AuthService', () => {
       (jwtService.sign as jest.Mock).mockReturnValue('signed-jwt-token');
 
       const result = await service.login(user);
-      expect(result).toEqual({ access_token: 'signed-jwt-token' });
+      expect(result).toEqual({ accessToken: 'signed-jwt-token' });
       expect(jwtService.sign).toHaveBeenCalledWith(payload);
     });
   });
