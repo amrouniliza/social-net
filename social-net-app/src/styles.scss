@@ -5,3 +5,10 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+/* conflict with the style in TailwindCSS and the angular material */
+.mdc-notched-outline__notch
+{
+  border-right: none;
+}
