@@ -18,4 +18,9 @@ export class AuthService {
       })
     );
   }
+
+  public get loggedIn(): boolean {
+    return localStorage.getItem('access_token') !== null;
+    // TODO: Check expiration time
+  }
 }
