@@ -3,6 +3,7 @@ import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { User } from 'src/users/interfaces';
+import { Response } from 'express';
 import { JwtPayload } from './interfaces';
 
 @Injectable()
@@ -24,10 +25,24 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User) {
+  async login(user: User, res: Response) {
     const payload: JwtPayload = { email: user.email, sub: user.id };
+    const token = this.jwtService.sign(payload);
+
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
     return {
-      accessToken: this.jwtService.sign(payload),
+      message: 'Login successful',
+    };
+  }
+
+  async logout(res: Response) {
+    res.clearCookie('jwt');
+    return {
+      message: 'Logout successful',
     };
   }
 }

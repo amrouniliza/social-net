@@ -7,6 +7,7 @@ import {
   Req,
   Get,
   Body,
+  Res,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
@@ -15,6 +16,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -31,8 +33,17 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  login(@Req() req: AuthenticatedRequest) {
-    return this.authService.login(req.user);
+  login(
+    @Req() req: AuthenticatedRequest,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.login(req.user, res);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  async logout(@Res() res: Response) {
+    return this.authService.logout(res);
   }
 
   @UseGuards(JwtAuthGuard)
