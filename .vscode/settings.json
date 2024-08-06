@@ -1,4 +1,5 @@
 {
+    "files.associations": { "*.scss": "postcss" },
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit"
     },
