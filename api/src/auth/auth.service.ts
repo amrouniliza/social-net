@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { User } from 'src/users/interfaces';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { JwtPayload } from './interfaces';
 
 @Injectable()
@@ -27,9 +27,15 @@ export class AuthService {
 
   async login(user: User, res: Response) {
     const payload: JwtPayload = { email: user.email, sub: user.id };
-    const token = this.jwtService.sign(payload);
+    const accessToken = this.jwtService.sign(payload);
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
 
-    res.cookie('jwt', token, {
+    res.cookie('jwt', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+    res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
@@ -37,6 +43,32 @@ export class AuthService {
     return {
       message: 'Login successful',
     };
+  }
+
+  async refreshToken(req: Request, res: Response) {
+    const refreshToken = req.cookies['refreshToken'];
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token not found');
+    }
+
+    try {
+      const payload = this.jwtService.verify(refreshToken);
+      const newAccessToken = this.jwtService.sign(
+        { email: payload.email, sub: payload.sub },
+        { expiresIn: '15m' },
+      );
+
+      res.cookie('jwt', newAccessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+      });
+      return {
+        message: 'Token refreshed',
+      };
+    } catch (e) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
   }
 
   async logout(res: Response) {

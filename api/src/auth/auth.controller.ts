@@ -16,7 +16,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -38,6 +38,11 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     return this.authService.login(req.user, res);
+  }
+
+  @Post('refresh')
+  async refresh(@Req() req: Request, @Res() res: Response) {
+    return this.authService.refreshToken(req, res);
   }
 
   @UseGuards(JwtAuthGuard)
