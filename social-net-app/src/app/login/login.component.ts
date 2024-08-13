@@ -5,9 +5,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { MatTabsModule } from '@angular/material/tabs';
+import { User } from '../models';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +21,9 @@ import { Subscription } from 'rxjs';
     MatButtonModule,
     FormsModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    RouterModule,
+    MatTabsModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -27,6 +31,7 @@ import { Subscription } from 'rxjs';
 export class LoginComponent implements OnInit, OnDestroy{
 
   loginForm: FormGroup;
+  registerForm: FormGroup;
   errorMessage! : string;
   AuthUserSub! : Subscription;
 
@@ -36,6 +41,12 @@ export class LoginComponent implements OnInit, OnDestroy{
     private fb: FormBuilder
   ) {
     this.loginForm = this.fb.group({
+      email: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+
+    this.registerForm = this.fb.group({
+      username: ['', Validators.required],
       email: ['', Validators.required],
       password: ['', Validators.required]
     });
@@ -60,6 +71,28 @@ export class LoginComponent implements OnInit, OnDestroy{
         this.errorMessage = err.message;
       }
     });
+  }
+
+  register() {
+    console.log('register');
+    const user: User = {
+      username: this.registerForm.get('username')?.value,
+      email: this.registerForm.get('email')?.value,
+      password: this.registerForm.get('password')?.value
+    };
+    // parse register form values as user object
+
+    if(this.registerForm.valid) {
+      this.authService.register(user).subscribe({
+        next: () => {
+          this.router.navigate(['home']);
+        },
+        error : (err) => {
+          console.log(err);
+          this.errorMessage = err.message;
+        }
+      });  
+    }
   }
 
   ngOnDestroy() {
