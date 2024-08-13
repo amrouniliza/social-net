@@ -1,7 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { HttpClient } from '@angular/common/http';
+ 
+import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap, throwError, switchMap } from 'rxjs';
+import { StorageService } from './storage.service';
+import { User } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -9,18 +11,45 @@ import { Observable, tap } from 'rxjs';
 export class AuthService {
   private readonly apiUrl = 'http://localhost:3000';
 
-  constructor(private http: HttpClient) {}
+  AuthenticatedUser$  = new BehaviorSubject<User | null>(null);
 
-  login(email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/auth/login`, { email, password }).pipe(
-      tap(response => {
-        localStorage.setItem('access_token', response.accessToken);
+  constructor(private http: HttpClient, private storageService: StorageService) {}
+
+  /**
+   * Authenticates a user by sending a POST request to the login endpoint.
+   *
+   * @param {Object} credentials - An object containing the user's email and password.
+   * @param {string} credentials.email - The user's email address.
+   * @param {string} credentials.password - The user's password.
+   * @return {Observable<User>} An observable that resolves to the authenticated user.
+   */
+  login(credentials: {email: string, password: string}): Observable<User> {
+    return this.http.post<{message: string}>(`${this.apiUrl}/auth/login`, credentials, { withCredentials: true})
+    .pipe(
+      switchMap(() => this.getUserProfile()),
+      catchError((err: HttpErrorResponse) => {
+        let errorMessage = 'An unknown error occurred!';
+        if(err.error.statusCode === HttpStatusCode.NotFound) errorMessage = err.error.message;
+        if(err.error.statusCode === HttpStatusCode.Unauthorized) errorMessage = 'Bad credentials'
+          return throwError(() =>  new Error(errorMessage))
       })
-    );
+    )
   }
 
-  public get loggedIn(): boolean {
-    return localStorage.getItem('access_token') !== null;
-    // TODO: Check expiration time
+/**
+ * Retrieves the user profile from the API.
+ *
+ * @return {Observable<User>} An observable that emits the user profile.
+ */
+  getUserProfile(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/auth/me`, { withCredentials: true }).pipe(
+      tap(
+        user => {
+          this.storageService.saveUser(user);
+          this.AuthenticatedUser$.next(user)
+        }
+      ),
+    )
   }
 }
+ 
