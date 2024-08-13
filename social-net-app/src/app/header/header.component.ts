@@ -1,20 +1,35 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { User } from '../models';
+import { Subscription } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
+
+  user! : User;
+  AuthUserSub! : Subscription;
 
   constructor(private authService: AuthService, private router: Router) {}
 
+
+  ngOnInit(): void {
+    this.AuthUserSub = this.authService.AuthenticatedUser$.subscribe({
+      next : user => {
+        if(user) this.user = user;
+      }
+    })
+  }
+    
   logout() {
     console.log('Logout');
     this.authService.logout().subscribe({

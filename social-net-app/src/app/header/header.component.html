@@ -1,5 +1,7 @@
 <mat-toolbar>
     <span>Social Net</span>
     <span class="flex-auto"></span>
+    <mat-icon fontIcon="account_circle"></mat-icon>
+    <div>{{user.username}}</div>
     <button mat-stroked-button (click)="logout()">Logout</button>
 </mat-toolbar>
