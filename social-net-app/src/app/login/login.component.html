@@ -15,6 +15,9 @@
                 </mat-form-field>
                 <button type="submit" mat-flat-button>Sign In</button>
             </form>
+            <div class="mt-10 p-4 rounded bg-red-300 border-red-500" *ngIf="errorMessage">
+                <p>{{errorMessage}}</p>
+              </div>
         </mat-card-content>
     </mat-card>
 </div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -23,8 +24,11 @@ import { CommonModule } from '@angular/common';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, OnDestroy{
+
   loginForm: FormGroup;
+  errorMessage! : string;
+  AuthUserSub! : Subscription;
 
   constructor(
     private authService: AuthService,
@@ -37,10 +41,28 @@ export class LoginComponent {
     });
   }
 
+  ngOnInit() {
+    this.AuthUserSub = this.authService.AuthenticatedUser$.subscribe({
+      next : user => {
+        if(user) {
+          this.router.navigate(['home']);
+        }
+      }
+    })
+  }
+
   login() {
-    const { email, password } = this.loginForm.value;
-    this.authService.login(email, password).subscribe(() => {
-      this.router.navigate(['']);
+    this.authService.login(this.loginForm.value).subscribe({
+      next: () => {
+        this.router.navigate(['home']);
+      },
+      error : (err) => {
+        this.errorMessage = err.message;
+      }
     });
+  }
+
+  ngOnDestroy() {
+    this.AuthUserSub.unsubscribe();
   }
 }
