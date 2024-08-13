@@ -19,6 +19,26 @@
                 <p>{{errorMessage}}</p>
               </div>
         </mat-card-content>
+        <mat-card-footer class="mx-auto">
+            <div>
+                Does not have an account yet ?
+                <a 
+                    class="underline cursor-pointer text-blue-600 decoration-blue-600"
+                    routerLink="/register"
+                >
+                    Register
+                </a>
+            </div>
+            <div class="mx-auto">
+                Forgot password ?
+                <a
+                    class="underline cursor-pointer text-blue-600 decoration-blue-600"
+                    routerLink="/forgot-password"
+                >
+                    Reset
+                </a>
+            </div>
+        </mat-card-footer>
     </mat-card>
 </div>
   
