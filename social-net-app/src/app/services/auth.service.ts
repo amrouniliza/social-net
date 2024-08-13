@@ -36,11 +36,11 @@ export class AuthService {
     )
   }
 
-/**
- * Retrieves the user profile from the API.
- *
- * @return {Observable<User>} An observable that emits the user profile.
- */
+  /**
+   * Retrieves the user profile from the API.
+   *
+   * @return {Observable<User>} An observable that emits the user profile.
+   */
   getUserProfile(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/auth/me`, { withCredentials: true }).pipe(
       tap(
@@ -50,6 +50,32 @@ export class AuthService {
         }
       ),
     )
+  }
+  
+  /**
+   * Logs out the currently authenticated user.
+   *
+   * @return {Observable<void>} An observable that resolves when the logout process is complete.
+   */
+  logout(): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/auth/logout`, {}, { withCredentials: true }).pipe(
+      tap(() =>{
+        this.storageService.clean();
+        this.AuthenticatedUser$.next(null);
+      })
+    );
+  }
+
+  /**
+   * Automatically logs in the user if they have a saved user profile.
+   *
+   * @return {void} No return value.
+   */
+  autoLogin(): void {
+    const user = this.storageService.getSavedUser();
+    if(user) {
+      this.AuthenticatedUser$.next(user);
+    }
   }
 }
  
