@@ -54,6 +54,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@Req() req: AuthenticatedRequest) {
-    return req.user;
+    return this.usersService.findOneById(req.user.id);
   }
 }

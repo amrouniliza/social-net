@@ -51,6 +51,18 @@ export class AuthService {
       ),
     )
   }
+
+  /**
+   * Registers a new user by sending a POST request to the registration endpoint.
+   *
+   * @param {User} user - The user object to be registered.
+   * @return {Observable<User>} An observable that resolves to the registered user.
+   */
+  register(user: User): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/auth/register`, user, { withCredentials: true }).pipe(
+      tap(() => this.AuthenticatedUser$.next(user))
+    )
+  }
   
   /**
    * Logs out the currently authenticated user.
