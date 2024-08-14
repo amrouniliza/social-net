@@ -89,5 +89,9 @@ export class AuthService {
       this.AuthenticatedUser$.next(user);
     }
   }
+
+  isLoggedIn(): boolean {
+    return !!this.AuthenticatedUser$.value;
+  }
 }
  

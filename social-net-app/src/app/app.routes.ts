@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { HomeComponent } from './home/home.component';
+import { ProfileComponent } from './profile/profile.component';
 
 export const routes: Routes = [
     {
@@ -16,6 +17,12 @@ export const routes: Routes = [
       {
         path: 'home',
         component: HomeComponent ,
+        canActivate: [authGuard],
+        // data: {roles: ['ROLE_ADMIN','ROLE_USER']}
+      },
+      {
+        path: 'profile/:userId',
+        component: ProfileComponent ,
         canActivate: [authGuard],
         // data: {roles: ['ROLE_ADMIN','ROLE_USER']}
       },

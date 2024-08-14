@@ -6,10 +6,10 @@
         {{user.username}}
     </button>
     <mat-menu #menu="matMenu">
-        <button mat-menu-item>
+        <a mat-menu-item [routerLink]="['profile', user.id]">
             <mat-icon>person</mat-icon>
             Profile
-        </button>
+        </a>
         <button mat-menu-item (click)="logout()">
             <mat-icon>logout</mat-icon>
             Logout

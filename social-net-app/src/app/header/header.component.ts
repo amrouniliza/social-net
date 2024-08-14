@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { User } from '../models';
 import { Subscription } from 'rxjs';
@@ -15,12 +15,13 @@ import { MatMenuModule } from '@angular/material/menu';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-    MatMenuModule
+    MatMenuModule,
+    RouterModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
 
   user! : User;
   AuthUserSub! : Subscription;
@@ -37,10 +38,13 @@ export class HeaderComponent implements OnInit {
   }
     
   logout() {
-    console.log('Logout');
     this.authService.logout().subscribe({
       next: () => this.router.navigate(['login']),
     });
+  }
+
+  ngOnDestroy(): void {
+    this.AuthUserSub.unsubscribe();
   }
 
 }
