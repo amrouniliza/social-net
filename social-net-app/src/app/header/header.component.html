@@ -1,7 +1,18 @@
 <mat-toolbar>
     <span>Social Net</span>
     <span class="flex-auto"></span>
-    <mat-icon fontIcon="account_circle"></mat-icon>
-    <div>{{user.username}}</div>
-    <button mat-stroked-button (click)="logout()">Logout</button>
+    <button mat-stroked-button [matMenuTriggerFor]="menu">
+        <mat-icon fontIcon="account_circle"></mat-icon>
+        {{user.username}}
+    </button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+            <mat-icon>person</mat-icon>
+            Profile
+        </button>
+        <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            Logout
+        </button>
+      </mat-menu>
 </mat-toolbar>

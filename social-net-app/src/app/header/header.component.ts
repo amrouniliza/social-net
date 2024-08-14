@@ -6,11 +6,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { User } from '../models';
 import { Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule],
+  imports: [
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
