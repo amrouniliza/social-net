@@ -1,6 +1,7 @@
 <mat-toolbar>
     <span>Social Net</span>
     <span class="flex-auto"></span>
+    @if (user) {
     <button mat-stroked-button [matMenuTriggerFor]="menu">
         <mat-icon fontIcon="account_circle"></mat-icon>
         {{user.username}}
@@ -15,4 +16,5 @@
             Logout
         </button>
       </mat-menu>
+    }
 </mat-toolbar>
