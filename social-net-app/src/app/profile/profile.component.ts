@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { User } from '../models';
 import { AuthService } from '../services/auth.service';
@@ -7,8 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
+import { NewPostComponent } from './new-post/new-post.component';
 
 @Component({
   selector: 'app-profile',
@@ -18,7 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
     MatInputModule,
     MatDividerModule,
     MatFormFieldModule,
-    MatButtonModule
+    NewPostComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
@@ -27,7 +26,6 @@ export class ProfileComponent implements OnInit {
 
   loggedInUser! : User;
   AuthUserSub! : Subscription;
-  readonly dialog = inject(MatDialog);
 
   constructor(private activatedRoute: ActivatedRoute, private authService: AuthService) {}
 
@@ -53,16 +51,4 @@ export class ProfileComponent implements OnInit {
     // })
   }
 
-  openNewPostDialog() {
-    // const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-    //   data: {name: this.name(), animal: this.animal()},
-    // });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log('The dialog was closed');
-    //   if (result !== undefined) {
-    //     this.animal.set(result);
-    //   }
-    // });
- }
 }
