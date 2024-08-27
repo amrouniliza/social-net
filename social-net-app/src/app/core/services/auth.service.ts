@@ -36,6 +36,10 @@ export class AuthService {
     )
   }
 
+  getRefreshToken(): Observable<{message: string}> {
+    return this.http.get<{message: string}>(`${this.apiUrl}/auth/refresh`, { withCredentials: true })
+  }
+
   /**
    * Retrieves the user profile from the API.
    *
