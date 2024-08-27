@@ -1,10 +1,11 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { User } from 'src/users/interfaces';
-import { Request, Response } from 'express';
-import { JwtPayload } from './interfaces';
+import { Response } from 'express';
+import { AuthToken, JwtPayload } from './interfaces';
+import { jwtConstants } from './constants';
 
 @Injectable()
 export class AuthService {
@@ -26,54 +27,52 @@ export class AuthService {
   }
 
   async login(user: User, res: Response) {
-    const payload: JwtPayload = { email: user.email, sub: user.id };
-    const accessToken = this.jwtService.sign(payload);
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
-
-    res.cookie('jwt', accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-    });
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-    });
+    const tokens = this.generateTokenPair(user);
+    this.storeTokensInCookies(res, tokens);
     return {
       message: 'Login successful',
-      user: user,
     };
   }
 
-  async refreshToken(req: Request, res: Response) {
-    const refreshToken = req.cookies['refreshToken'];
-    if (!refreshToken) {
-      throw new UnauthorizedException('Refresh token not found');
-    }
-
-    try {
-      const payload = this.jwtService.verify(refreshToken);
-      const newAccessToken = this.jwtService.sign(
-        { email: payload.email, sub: payload.sub },
-        { expiresIn: '15m' },
-      );
-
-      res.cookie('jwt', newAccessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-      });
-      return {
-        message: 'Token refreshed',
-      };
-    } catch (e) {
-      throw new UnauthorizedException('Invalid refresh token');
-    }
+  async refreshToken(user: User, res: Response) {
+    const tokens = this.generateTokenPair(user);
+    this.storeTokensInCookies(res, tokens);
+    return {
+      message: 'Token refreshed',
+    };
   }
 
-  async logout(res: Response) {
-    res.clearCookie('jwt');
+  generateTokenPair(user: User): AuthToken {
+    const payload: JwtPayload = { email: user.email, sub: user.id };
+    const accessToken = this.jwtService.sign(payload, {
+      secret: jwtConstants.access_token_secret,
+      expiresIn: '1m',
+    });
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: jwtConstants.refresh_token_secret,
+      expiresIn: '7d',
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  storeTokensInCookies(res: Response, authToken: AuthToken): void {
+    res.cookie('access_token', authToken.accessToken, {
+      maxAge: 1000 * 60 * 15,
+      httpOnly: true,
+    });
+    res.cookie('refresh_token', authToken.refreshToken, {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+    });
+  }
+
+  async logout(res: Response): Promise<{ message: string }> {
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
     return {
       message: 'Logout successful',
     };
