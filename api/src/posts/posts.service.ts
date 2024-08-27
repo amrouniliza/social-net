@@ -5,6 +5,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PostEntity } from './entities/post.entity';
 import { Repository } from 'typeorm';
 import { UserEntity } from 'src/users/entities/user.entity';
+import {
+  PaginatedResource,
+  Pagination,
+} from 'src/common/decorators/pagination-params.decorator';
+import { Sorting } from 'src/common/decorators/sorting-params.decorator';
+import { Filtering } from 'src/common/decorators/filtering-params.decorator';
+import { getOrder, getWhere } from 'src/common/helpers/typeorm.helpers';
 
 @Injectable()
 export class PostsService {
@@ -30,8 +37,40 @@ export class PostsService {
     return this.postsRepository.save(newPost);
   }
 
-  findAll(): Promise<PostEntity[]> {
-    return this.postsRepository.find();
+  async findAll(
+    { page, limit, size, offset }: Pagination,
+    sort?: Sorting,
+    filter?: Filtering,
+  ): Promise<PaginatedResource<PostEntity>> {
+    const where = getWhere(filter);
+    const order = getOrder(sort);
+
+    const [posts, total] = await this.postsRepository.findAndCount({
+      where,
+      order,
+      take: limit,
+      skip: offset,
+    });
+
+    return {
+      items: posts,
+      totalItems: total,
+      page,
+      size,
+    };
+  }
+
+  async findAllByAuthor(authorId: string): Promise<PostEntity[]> {
+    const posts = await this.postsRepository.find({
+      where: { author: { id: authorId } },
+      relations: { author: true },
+    });
+    if (posts.length === 0) {
+      throw new NotFoundException(
+        `No posts found for author with ID ${authorId}`,
+      );
+    }
+    return posts;
   }
 
   async findOneById(id: string): Promise<PostEntity> {

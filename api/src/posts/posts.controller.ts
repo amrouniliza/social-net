@@ -14,6 +14,19 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostEntity } from './entities/post.entity';
+import {
+  PaginatedResource,
+  Pagination,
+  PaginationParams,
+} from 'src/common/decorators/pagination-params.decorator';
+import {
+  Sorting,
+  SortingParams,
+} from 'src/common/decorators/sorting-params.decorator';
+import {
+  Filtering,
+  FilteringParams,
+} from 'src/common/decorators/filtering-params.decorator';
 
 @Controller('posts')
 export class PostsController {
@@ -26,8 +39,12 @@ export class PostsController {
   }
 
   @Get()
-  async findAll(): Promise<PostEntity[]> {
-    return this.postsService.findAll();
+  async findAll(
+    @PaginationParams() paginationParams: Pagination,
+    @SortingParams(['createdAt']) sort?: Sorting,
+    @FilteringParams([]) filter?: Filtering,
+  ): Promise<PaginatedResource<PostEntity>> {
+    return this.postsService.findAll(paginationParams, sort, filter);
   }
 
   @Get(':id')
@@ -37,6 +54,13 @@ export class PostsController {
       throw new NotFoundException(`Post with id ${id} not found`);
     }
     return post;
+  }
+
+  @Get('author/:authorId')
+  async findAllByAuthor(
+    @Param('authorId') authorId: string,
+  ): Promise<PostEntity[]> {
+    return this.postsService.findAllByAuthor(authorId);
   }
 
   @Patch(':id')
