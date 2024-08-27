@@ -9,6 +9,7 @@ import {
   HttpCode,
   HttpStatus,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -27,8 +28,10 @@ import {
   Filtering,
   FilteringParams,
 } from 'src/common/decorators/filtering-params.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('posts')
+@UseGuards(JwtAuthGuard)
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
