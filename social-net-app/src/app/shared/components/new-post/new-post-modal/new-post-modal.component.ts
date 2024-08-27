@@ -45,8 +45,6 @@ export class NewPostModalComponent {
   }
 
   onSubmit(): void {
-    console.log('submit');
-    console.log(this.newPostForm.value);
     const newPost: Post = {
       ...this.newPostForm.value,
     }
