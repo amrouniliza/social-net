@@ -1,0 +1,21 @@
+<mat-card class="gap-6 items-center p-2">
+    <mat-card-header>
+        <mat-card-title>Create a new post</mat-card-title>
+    </mat-card-header>
+    <form [formGroup]="newPostForm" (ngSubmit)="onSubmit()" class="flex ">
+        <mat-card-content class="self-stretch">
+            <mat-form-field class="w-full">
+                <textarea 
+                    formControlName="content" class="!resize-none" matInput placeholder="What's on your mind, .. ?" rows="4"></textarea>
+            </mat-form-field>
+            <button mat-button>
+                <mat-icon>add_circle</mat-icon>
+                Add image
+            </button>
+        </mat-card-content>
+        <mat-card-actions class="self-stretch flex justify-between">
+            <button mat-flat-button type="submit">Post it</button>
+            <button mat-flat-button color="warn" (click)="closeModal()">Close</button>
+        </mat-card-actions>
+    </form>
+</mat-card>

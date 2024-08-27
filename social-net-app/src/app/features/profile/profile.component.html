@@ -9,7 +9,13 @@
     <div class="grow pt-6">
 
         <!-- What's on your mind component -->
-        <app-new-post></app-new-post>
+        <app-new-post [user]="loggedInUser"></app-new-post>
+
+        <div class="flex flex-col gap-4 mx-12 mt-4">
+            @for (post of posts(); track $index) {
+                <app-post [post]="post"></app-post>
+            }
+        </div>
 
     </div>
 </div>

@@ -2,8 +2,8 @@
 import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, tap, throwError, switchMap } from 'rxjs';
-import { StorageService } from './storage.service';
-import { User } from '../models';
+import { StorageService } from '../../services/storage.service';
+import { User } from '../../models';
 
 @Injectable({
   providedIn: 'root'
@@ -94,4 +94,3 @@ export class AuthService {
     return !!this.AuthenticatedUser$.value;
   }
 }
- 

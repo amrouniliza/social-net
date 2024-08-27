@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NewPostModalComponent } from './new-post-modal/new-post-modal.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { User } from '../../../models';
 
 @Component({
   selector: 'app-new-post',
@@ -15,20 +16,13 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './new-post.component.scss'
 })
 export class NewPostComponent {
-
   readonly dialog = inject(MatDialog);
+  user = input.required<User>()
 
   openNewPostDialog() {
-    const dialogRef = this.dialog.open(NewPostModalComponent, {
+    this.dialog.open<NewPostModalComponent>(NewPostModalComponent, {
       width: '50%',
-      data: {},
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      if (result !== undefined) {
-        console.log(result);
-      }
+      data:  this.user() 
     });
   }
 
