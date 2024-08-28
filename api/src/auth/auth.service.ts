@@ -16,14 +16,9 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.usersService.findOneByEmail(email);
-    let isValid: boolean;
-    if (user) {
-      isValid = await bcrypt.compare(password, user.password);
-    }
-    if (isValid) {
-      return user as User;
-    }
-    return null;
+    return user && (await bcrypt.compare(password, user.password))
+      ? user
+      : null;
   }
 
   async login(user: User, res: Response) {
@@ -60,11 +55,11 @@ export class AuthService {
   }
 
   storeTokensInCookies(res: Response, authToken: AuthToken): void {
-    res.cookie('access_token', authToken.accessToken, {
+    res.cookie('accessToken', authToken.accessToken, {
       maxAge: 1000 * 60 * 15,
       httpOnly: true,
     });
-    res.cookie('refresh_token', authToken.refreshToken, {
+    res.cookie('refreshToken', authToken.refreshToken, {
       maxAge: 1000 * 60 * 60 * 24 * 7,
       httpOnly: true,
     });
