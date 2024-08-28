@@ -1,17 +1,21 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { User } from '../../../models';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { Store } from '@ngrx/store';
+import { selectUser, selectUserIsLogged } from '../../../store/auth/selectors/auth.selectors';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
+    CommonModule,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
@@ -21,30 +25,30 @@ import { MatMenuModule } from '@angular/material/menu';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnDestroy {
 
-  user! : User;
-  AuthUserSub! : Subscription;
+  user$!: Observable<User | null>;
+  isAuthenticated$! : Observable<boolean>;
+  logoutSub! : Subscription;
 
-  constructor(private authService: AuthService, private router: Router) {}
-
-
-  ngOnInit(): void {
-    this.AuthUserSub = this.authService.AuthenticatedUser$.subscribe({
-      next : user => {
-        if(user) this.user = user;
-      }
-    })
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private store: Store
+  ) {
+    this.user$ = this.store.select(selectUser);
+    this.isAuthenticated$ = this.store.select(selectUserIsLogged);
   }
     
   logout() {
-    this.authService.logout().subscribe({
+    this.logoutSub = this.authService.logout().subscribe({
       next: () => this.router.navigate(['login']),
     });
   }
 
   ngOnDestroy(): void {
-    this.AuthUserSub.unsubscribe();
+    if (this.logoutSub) {
+      this.logoutSub.unsubscribe();
+    }
   }
-
 }

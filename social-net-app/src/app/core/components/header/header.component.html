@@ -1,7 +1,7 @@
 <mat-toolbar class="mat-elevation-z2">
-    <span>Social Net</span>
+    <span class="cursor-pointer" routerLink="home">Social Net</span>
     <span class="flex-auto"></span>
-    @if (user) {
+    @if (user$ | async; as user) {
     <button mat-stroked-button [matMenuTriggerFor]="menu">
         <mat-icon fontIcon="account_circle"></mat-icon>
         {{user.username}}
@@ -15,6 +15,6 @@
             <mat-icon>logout</mat-icon>
             Logout
         </button>
-      </mat-menu>
+    </mat-menu>
     }
 </mat-toolbar>
