@@ -7,9 +7,12 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { AuthService } from '../../core/services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { MatTabsModule } from '@angular/material/tabs';
-import { User } from '../../models';
+import { Credentials, User } from '../../models';
+import { Store } from '@ngrx/store';
+import { login, signUp } from '../../store/auth/actions/auth.actions';
+import { selectError } from '../../store/auth/selectors/auth.selectors';
 
 @Component({
   selector: 'app-login',
@@ -32,13 +35,14 @@ export class LoginComponent implements OnInit, OnDestroy{
 
   loginForm: FormGroup;
   registerForm: FormGroup;
-  errorMessage! : string;
-  AuthUserSub! : Subscription;
+  errorMessage$! : Observable<string | null>;
+  isLogged$! : Subscription;
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private store: Store
   ) {
     this.loginForm = this.fb.group({
       email: ['', Validators.required],
@@ -50,52 +54,43 @@ export class LoginComponent implements OnInit, OnDestroy{
       email: ['', Validators.required],
       password: ['', Validators.required]
     });
+
+    this.errorMessage$ = this.store.select(selectError)
+
   }
 
   ngOnInit() {
-    this.AuthUserSub = this.authService.AuthenticatedUser$.subscribe({
-      next : user => {
-        if(user) {
+    this.isLogged$ = this.authService.isLogged.subscribe({
+      next : isLogged => {
+        if(isLogged) {
           this.router.navigate(['home']);
         }
-      }
+      },
     })
   }
 
   login() {
-    this.authService.login(this.loginForm.value).subscribe({
-      next: () => {
-        this.router.navigate(['home']);
-      },
-      error : (err) => {
-        this.errorMessage = err.message;
-      }
-    });
+    const credentials: Credentials = {
+      email: this.loginForm.get('email')?.value,
+      password: this.loginForm.get('password')?.value
+    }
+    this.store.dispatch(login(credentials));
   }
 
   register() {
-    console.log('register');
     const user: User = {
       username: this.registerForm.get('username')?.value,
       email: this.registerForm.get('email')?.value,
       password: this.registerForm.get('password')?.value
     };
-    // parse register form values as user object
 
     if(this.registerForm.valid) {
-      this.authService.register(user).subscribe({
-        next: () => {
-          this.router.navigate(['home']);
-        },
-        error : (err) => {
-          console.log(err);
-          this.errorMessage = err.message;
-        }
-      });  
+
+      this.store.dispatch(signUp({user}));  
     }
   }
 
   ngOnDestroy() {
-    this.AuthUserSub.unsubscribe();
+    this.isLogged$.unsubscribe();
   }
 }
