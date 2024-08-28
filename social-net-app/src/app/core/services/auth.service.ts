@@ -1,9 +1,11 @@
  
-import { HttpClient, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, tap, throwError, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, switchMap, of } from 'rxjs';
 import { StorageService } from '../../services/storage.service';
 import { User } from '../../models';
+import { Store } from '@ngrx/store';
+import { selectUserIsLogged } from '../../store/auth/selectors/auth.selectors';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,11 @@ export class AuthService {
 
   AuthenticatedUser$  = new BehaviorSubject<User | null>(null);
 
-  constructor(private http: HttpClient, private storageService: StorageService) {}
+  constructor(
+    private http: HttpClient,
+    private storageService: StorageService,
+    private store: Store
+  ) {}
 
   /**
    * Authenticates a user by sending a POST request to the login endpoint.
@@ -23,20 +29,18 @@ export class AuthService {
    * @param {string} credentials.password - The user's password.
    * @return {Observable<User>} An observable that resolves to the authenticated user.
    */
-  login(credentials: {email: string, password: string}): Observable<User> {
+  login(credentials: {email: string, password: string}): Observable<{message: string}> {
     return this.http.post<{message: string}>(`${this.apiUrl}/auth/login`, credentials, { withCredentials: true})
-    .pipe(
-      switchMap(() => this.getUserProfile()),
-      catchError((err: HttpErrorResponse) => {
-        let errorMessage = 'An unknown error occurred!';
-        if(err.error.statusCode === HttpStatusCode.NotFound) errorMessage = err.error.message;
-        if(err.error.statusCode === HttpStatusCode.Unauthorized) errorMessage = 'Bad credentials'
-          return throwError(() =>  new Error(errorMessage))
-      })
-    )
+
   }
 
-  getRefreshToken(): Observable<{message: string}> {
+
+  /**
+   * Refreshes the user's access token by sending a GET request to the refresh endpoint.
+   *
+   * @return {Observable<{message: string}>} An observable that resolves to an object containing a message.
+   */
+  refreshToken(): Observable<{message: string}> {
     return this.http.get<{message: string}>(`${this.apiUrl}/auth/refresh`, { withCredentials: true })
   }
 
@@ -47,10 +51,11 @@ export class AuthService {
    */
   getUserProfile(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/auth/me`, { withCredentials: true }).pipe(
-      tap(
-        user => {
+      tap((user)=> console.log(user)),
+      switchMap(
+        (user) => {
           this.storageService.saveUser(user);
-          this.AuthenticatedUser$.next(user)
+          return of(user);
         }
       ),
     )
@@ -83,18 +88,13 @@ export class AuthService {
   }
 
   /**
-   * Automatically logs in the user if they have a saved user profile.
+   * Returns an observable that emits a boolean indicating whether the user is logged in or not.
+   * If the user is not logged in, the observable emits undefined or false.
    *
-   * @return {void} No return value.
+   * @return {Observable<boolean | undefined>} An observable that emits a boolean indicating whether the user is logged in or not.
    */
-  autoLogin(): void {
-    const user = this.storageService.getSavedUser();
-    if(user) {
-      this.AuthenticatedUser$.next(user);
-    }
+  get isLogged(): Observable<boolean | undefined> {
+    return this.store.select(selectUserIsLogged);
   }
 
-  isLoggedIn(): boolean {
-    return !!this.AuthenticatedUser$.value;
-  }
 }
