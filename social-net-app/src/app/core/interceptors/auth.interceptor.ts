@@ -4,7 +4,7 @@ import {
   HttpStatusCode,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, retry, switchMap, throwError } from 'rxjs';
+import { catchError, retry, switchMap, tap, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { HttpError } from '../../models';
@@ -17,7 +17,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     retry(0),
     catchError((error) => {
-      if (error instanceof HttpErrorResponse) {
+      if (
+        error instanceof HttpErrorResponse &&
+        !req.url.includes('auth/refresh')
+      ) {
         const HttpError: HttpError = {
           statusCode: error.error.statusCode,
           message: error.error.message,
@@ -28,6 +31,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               isRefreshing = true;
 
               return authService.refreshToken().pipe(
+                retry(0),
                 switchMap(() => {
                   isRefreshing = false;
 
@@ -36,7 +40,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                 catchError((error) => {
                   isRefreshing = false;
 
-                  if (error.status == '403') {
+                  if (error.status == 403) {
                     authService.logout();
                     router.navigate(['/login']);
                   }

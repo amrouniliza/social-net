@@ -1,12 +1,10 @@
 import { createReducer, on } from '@ngrx/store';
 import { User } from '../../../models';
 import {
+  authFailure,
+  authSuccess,
   initFailure,
-  loginFailure,
-  loginSuccess,
   logout,
-  signUpFailure,
-  signUpSuccess,
 } from '../actions/auth.actions';
 
 export interface AuthState {
@@ -31,7 +29,7 @@ export const authReducer = createReducer(
     }),
   ),
   on(
-    loginSuccess,
+    authSuccess,
     (state, { user }): AuthState => ({
       ...state,
       isAuthenticated: true,
@@ -40,23 +38,7 @@ export const authReducer = createReducer(
     }),
   ),
   on(
-    loginFailure,
-    (state, { error }): AuthState => ({
-      ...state,
-      errorMessage: error.message,
-    }),
-  ),
-  on(
-    signUpSuccess,
-    (state, { user }): AuthState => ({
-      ...state,
-      isAuthenticated: true,
-      user: user,
-      errorMessage: null,
-    }),
-  ),
-  on(
-    signUpFailure,
+    authFailure,
     (state, { error }): AuthState => ({
       ...state,
       errorMessage: error.message,

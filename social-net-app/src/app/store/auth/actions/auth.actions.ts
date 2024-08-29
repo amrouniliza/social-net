@@ -5,12 +5,10 @@ export enum AuthActionTypes {
   INIT = '[App] Init',
   INIT_FAILURE = '[App] Init Failure',
   LOGIN = '[Auth] Login',
-  LOAD_USER = '[Auth] Load User',
-  LOGIN_SUCCESS = '[Auth] Login Success',
-  LOGIN_FAILURE = '[Auth] Login Failure',
   SIGNUP = '[Auth] Signup',
-  SIGNUP_SUCCESS = '[Auth] Signup Success',
-  SIGNUP_FAILURE = '[Auth] Signup Failure',
+  LOAD_USER = '[Auth] Load User',
+  AUTH_SUCCESS = '[Auth] Auth Success',
+  AUTH_FAILURE = '[Auth] Auth Failure',
   REFRESH_TOKEN = '[Auth] Refresh Token',
   LOGOUT = '[Auth] Logout',
   GET_STATUS = '[Auth] GetStatus',
@@ -27,29 +25,19 @@ export const login = createAction(
 
 export const loadUser = createAction(AuthActionTypes.LOAD_USER);
 
-export const loginSuccess = createAction(
-  AuthActionTypes.LOGIN_SUCCESS,
+export const authSuccess = createAction(
+  AuthActionTypes.AUTH_SUCCESS,
   props<{ user: User }>(),
 );
 
-export const loginFailure = createAction(
-  AuthActionTypes.LOGIN_FAILURE,
+export const authFailure = createAction(
+  AuthActionTypes.AUTH_FAILURE,
   props<{ error: HttpError }>(),
 );
 
 export const signUp = createAction(
   AuthActionTypes.SIGNUP,
   props<{ user: User }>(),
-);
-
-export const signUpSuccess = createAction(
-  AuthActionTypes.SIGNUP_SUCCESS,
-  props<{ user: User }>(),
-);
-
-export const signUpFailure = createAction(
-  AuthActionTypes.SIGNUP_FAILURE,
-  props<{ error: HttpError }>(),
 );
 
 export const refreshToken = createAction(AuthActionTypes.REFRESH_TOKEN);

@@ -1,10 +1,9 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { AuthService } from '../../services/auth.service';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { User } from '../../../models';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { Store } from '@ngrx/store';
@@ -13,6 +12,7 @@ import {
   selectUserIsLogged,
 } from '../../../store/auth/selectors/auth.selectors';
 import { CommonModule } from '@angular/common';
+import { logout } from '../../../store/auth/actions/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -28,29 +28,16 @@ import { CommonModule } from '@angular/common';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent implements OnDestroy {
+export class HeaderComponent {
   user$!: Observable<User | null>;
   isAuthenticated$!: Observable<boolean>;
-  logoutSub!: Subscription;
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private store: Store,
-  ) {
+  constructor(private store: Store) {
     this.user$ = this.store.select(selectUser);
     this.isAuthenticated$ = this.store.select(selectUserIsLogged);
   }
 
   logout() {
-    this.logoutSub = this.authService.logout().subscribe({
-      next: () => this.router.navigate(['login']),
-    });
-  }
-
-  ngOnDestroy(): void {
-    if (this.logoutSub) {
-      this.logoutSub.unsubscribe();
-    }
+    this.store.dispatch(logout());
   }
 }

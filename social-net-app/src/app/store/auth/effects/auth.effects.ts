@@ -4,16 +4,14 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 import {
-  loginFailure,
   AuthActionTypes,
   loadUser,
-  loginSuccess,
   login,
   signUp,
-  signUpSuccess,
-  signUpFailure,
   initFailure,
   logout,
+  authFailure,
+  authSuccess,
 } from '../actions/auth.actions';
 import { inject } from '@angular/core';
 
@@ -28,7 +26,7 @@ export class AuthEffects {
       ofType(AuthActionTypes.INIT),
       switchMap(() =>
         this.authService.getUserProfile().pipe(
-          map((user) => loginSuccess({ user })),
+          map((user) => authSuccess({ user })),
           catchError(() => {
             this.router.navigate(['login']);
             return of(initFailure());
@@ -46,7 +44,7 @@ export class AuthEffects {
           .login({ email: credentials.email, password: credentials.password })
           .pipe(
             map(() => loadUser()),
-            catchError((error) => of(loginFailure({ error }))),
+            catchError((error) => of(authFailure({ error }))),
           ),
       ),
     );
@@ -57,17 +55,17 @@ export class AuthEffects {
       ofType(AuthActionTypes.LOAD_USER),
       switchMap(() =>
         this.authService.getUserProfile().pipe(
-          map((user) => loginSuccess({ user })),
-          catchError((error) => of(loginFailure({ error }))),
+          map((user) => authSuccess({ user })),
+          catchError((error) => of(authFailure({ error }))),
         ),
       ),
     );
   });
 
-  loginOrSignupSuccess$ = createEffect(
+  authSuccess$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(AuthActionTypes.LOGIN_SUCCESS, AuthActionTypes.SIGNUP_SUCCESS),
+        ofType(AuthActionTypes.AUTH_SUCCESS),
         tap(() => this.router.navigate(['home'])),
       );
     },
@@ -79,8 +77,8 @@ export class AuthEffects {
       ofType(AuthActionTypes.SIGNUP),
       switchMap((payload: ReturnType<typeof signUp>) =>
         this.authService.register(payload.user).pipe(
-          map((user) => signUpSuccess({ user })),
-          catchError((error) => of(signUpFailure({ error }))),
+          map(() => loadUser()),
+          catchError((error) => of(authFailure({ error }))),
         ),
       ),
     );
@@ -98,8 +96,12 @@ export class AuthEffects {
     () => {
       return this.actions$.pipe(
         ofType(AuthActionTypes.LOGOUT),
-        tap(() => this.authService.logout()),
-        tap(() => this.router.navigate(['/login'])),
+        switchMap(() =>
+          this.authService.logout().pipe(
+            map(() => this.router.navigate(['/login'])),
+            tap(() => console.log('Logout')),
+          ),
+        ),
       );
     },
     { dispatch: false },
