@@ -14,18 +14,32 @@ import {
 } from 'typeorm';
 import { Exclude, instanceToPlain } from 'class-transformer';
 import { User } from 'src/users/interfaces';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 @Unique(['email'])
 export class UserEntity implements User {
+  @ApiProperty({
+    example: 'a7d8b6a3-32d1-4c0a-b5e7-8e0f0b1b2b3b',
+    description: 'The id of the user',
+  })
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @ApiProperty({
+    example: 'JohnDoe',
+    description: 'The username of the user',
+  })
   @Column()
   username: string;
 
+  @ApiProperty({
+    example: 'user@example.com',
+    description: 'The email of the user',
+  })
   @Column()
   email: string;
+
 
   @Exclude()
   @Column()
@@ -34,6 +48,10 @@ export class UserEntity implements User {
   @Column({ nullable: true })
   profilePicture: string;
 
+  @ApiProperty({
+    example: 'I am a user',
+    description: 'The bio of the user',
+  })
   @Column({ nullable: true })
   bio: string;
 
