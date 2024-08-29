@@ -11,8 +11,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { PostService } from '../../../../services/post.service';
 import { Post, User } from '../../../../models';
+import { Store } from '@ngrx/store';
+import { postsActions } from '../../../../store/posts/actions/posts.actions';
 
 @Component({
   selector: 'app-new-post-modal',
@@ -35,7 +36,7 @@ export class NewPostModalComponent {
 
   constructor(
     private fb: FormBuilder,
-    private postService: PostService,
+    private store: Store,
   ) {
     this.newPostForm = this.fb.group({
       content: ['', Validators.required],
@@ -52,16 +53,7 @@ export class NewPostModalComponent {
       ...this.newPostForm.value,
     };
     if (this.newPostForm.valid) {
-      this.postService.createPost(this.newPostForm.value).subscribe({
-        next: (response) => {
-          console.log('Post created successfully:', response);
-          // Logique supplémentaire après la création du post
-        },
-        error: (error) => {
-          console.error('Error creating post:', error);
-          // Gérer l'erreur
-        },
-      });
+      this.store.dispatch(postsActions.createPost({ post: newPost }));
       this.closeModal();
     }
   }

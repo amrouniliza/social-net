@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { NewPostForm, Post, User } from '../../models';
+import { Post, User } from '../../models';
 import { Observable } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NewPostComponent } from '../../shared/components/new-post/new-post.component';
-import { FormGroup } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { DateAgoPipe } from '../../shared/pipes/date-ago.pipe';
 import { PostComponent } from '../../shared/components/post/post.component';
@@ -39,7 +38,6 @@ export class ProfileComponent implements OnInit {
   loggedInUser$!: Observable<User | null>;
   loggedInUser!: User;
   profileUser!: User;
-  newPostForm!: FormGroup<NewPostForm>;
   posts$!: Observable<Post[]>;
   consultedProfileId!: string;
   constructor(
