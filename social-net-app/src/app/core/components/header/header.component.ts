@@ -8,7 +8,10 @@ import { Observable, Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { Store } from '@ngrx/store';
-import { selectUser, selectUserIsLogged } from '../../../store/auth/selectors/auth.selectors';
+import {
+  selectUser,
+  selectUserIsLogged,
+} from '../../../store/auth/selectors/auth.selectors';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -20,26 +23,25 @@ import { CommonModule } from '@angular/common';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnDestroy {
-
   user$!: Observable<User | null>;
-  isAuthenticated$! : Observable<boolean>;
-  logoutSub! : Subscription;
+  isAuthenticated$!: Observable<boolean>;
+  logoutSub!: Subscription;
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private store: Store
+    private store: Store,
   ) {
     this.user$ = this.store.select(selectUser);
     this.isAuthenticated$ = this.store.select(selectUserIsLogged);
   }
-    
+
   logout() {
     this.logoutSub = this.authService.logout().subscribe({
       next: () => this.router.navigate(['login']),

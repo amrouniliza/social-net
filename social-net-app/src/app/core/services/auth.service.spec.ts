@@ -1,6 +1,9 @@
 // social-net-app/src/app/services/auth.service.spec.ts
 import { TestBed } from '@angular/core/testing';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
 import { AuthService } from './auth.service';
 import { StorageService } from '../../services/storage.service';
 import { User } from '../../models';
@@ -17,8 +20,14 @@ describe('AuthService', () => {
         provideHttpClientTesting(),
         provideHttpClient(),
         AuthService,
-        { provide: StorageService, useValue: jasmine.createSpyObj('StorageService', ['saveUser', 'removeUser']) }
-      ]
+        {
+          provide: StorageService,
+          useValue: jasmine.createSpyObj('StorageService', [
+            'saveUser',
+            'removeUser',
+          ]),
+        },
+      ],
     });
 
     service = TestBed.inject(AuthService);
@@ -37,9 +46,11 @@ describe('AuthService', () => {
 
       httpMock.expectOne('https://example.com/api/auth/login').flush(response);
 
-      service.login({ email: 'test@example.com', password: 'password' }).subscribe((result) => {
-        expect(result).toEqual(user);
-      });
+      service
+        .login({ email: 'test@example.com', password: 'password' })
+        .subscribe((result) => {
+          expect(result).toEqual(user);
+        });
     });
 
     it('should throw an error if the login fails', () => {
@@ -47,9 +58,11 @@ describe('AuthService', () => {
 
       httpMock.expectOne('https://example.com/api/auth/login').error(err);
 
-      service.login({ email: 'test@example.com', password: 'password' }).subscribe((result) => {
-        expect(result).toBeUndefined();
-      });
+      service
+        .login({ email: 'test@example.com', password: 'password' })
+        .subscribe((result) => {
+          expect(result).toBeUndefined();
+        });
     });
   });
 
@@ -71,11 +84,15 @@ describe('AuthService', () => {
       const user: User = { email: 'test@example.com', password: 'password' };
       const response = { user };
 
-      httpMock.expectOne('https://example.com/api/auth/register').flush(response);
+      httpMock
+        .expectOne('https://example.com/api/auth/register')
+        .flush(response);
 
-      service.register({ email: 'test@example.com', password: 'password' }).subscribe((result) => {
-        expect(result).toEqual(user);
-      });
+      service
+        .register({ email: 'test@example.com', password: 'password' })
+        .subscribe((result) => {
+          expect(result).toEqual(user);
+        });
     });
   });
 
@@ -92,4 +109,4 @@ describe('AuthService', () => {
       expect(storageServiceMock.getSavedUser).toHaveBeenCalled();
     });
   });
-})
+});

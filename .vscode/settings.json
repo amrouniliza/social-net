@@ -1,11 +1,16 @@
 {
     "files.associations": { "*.scss": "postcss" },
+    "eslint.validate": [ "javascript", "typescript", "html"],
+
+  "eslint.useFlatConfig": true,
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit"
     },
     "eslint.workingDirectories": [
-        {
-            "mode": "auto"
-        }
+      "./api",
+      "./social-net-app"
+        // {
+        //     "mode": "auto"
+        // }
     ]
 }

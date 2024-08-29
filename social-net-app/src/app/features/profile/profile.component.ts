@@ -13,7 +13,7 @@ import { PostService } from '../../services/post.service';
 import { PostAddEmitterService } from '../../services/emitters/post-add-emitter.service';
 import { MatIconModule } from '@angular/material/icon';
 import { DateAgoPipe } from '../../shared/pipes/date-ago.pipe';
-import { PostComponent } from "../../shared/components/post/post.component";
+import { PostComponent } from '../../shared/components/post/post.component';
 
 @Component({
   selector: 'app-profile',
@@ -26,16 +26,15 @@ import { PostComponent } from "../../shared/components/post/post.component";
     MatIconModule,
     NewPostComponent,
     DateAgoPipe,
-    PostComponent
-],
+    PostComponent,
+  ],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss'
+  styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit {
-
-  loggedInUser! : User;
-  AuthUserSub! : Subscription;
-  newPostForm! : FormGroup<NewPostForm>;
+  loggedInUser!: User;
+  AuthUserSub!: Subscription;
+  newPostForm!: FormGroup<NewPostForm>;
   posts = signal<Post[]>([]); // Signal pour stocker la liste des posts
 
   constructor(
@@ -49,17 +48,18 @@ export class ProfileComponent implements OnInit {
     this.activatedRoute.params.subscribe((params: Params) => {
       this.getRegisteredUser();
 
-      if(params['userId'] !== this.loggedInUser.id) this.getUserProfile(params['userId']);
+      if (params['userId'] !== this.loggedInUser.id)
+        this.getUserProfile(params['userId']);
     });
     if (this.loggedInUser?.id) this.getProfilePosts(this.loggedInUser.id);
   }
 
   getRegisteredUser() {
     this.AuthUserSub = this.authService.AuthenticatedUser$.subscribe({
-      next : user => {
-        if(user) this.loggedInUser = user;
-      }
-    })
+      next: (user) => {
+        if (user) this.loggedInUser = user;
+      },
+    });
   }
 
   getUserProfile(id: string) {
@@ -73,5 +73,4 @@ export class ProfileComponent implements OnInit {
       this.posts.set(posts); // Met à jour le signal avec la liste des posts
     });
   }
-
 }

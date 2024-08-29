@@ -1,18 +1,22 @@
 <mat-card>
-    <mat-card-header>
-        <div mat-card-avatar></div>
-        <mat-card-title>{{ post().author.username }}</mat-card-title>
-        <mat-card-subtitle>{{ post().createdAt | dateAgo }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-        {{ post().content }}
-        @if (post().imageUrl) {
-            <img mat-card-image src="{{post().imageUrl}}" alt="Photo of a Shiba Inu">
-        }
-    </mat-card-content>
-    <mat-card-actions>
-        <button mat-icon-button>
-            <mat-icon>favorite</mat-icon>
-        </button>
-    </mat-card-actions>
+  <mat-card-header>
+    <div mat-card-avatar></div>
+    <mat-card-title>{{ post().author.username }}</mat-card-title>
+    <mat-card-subtitle>{{ post().createdAt | dateAgo }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    {{ post().content }}
+    @if (post().imageUrl) {
+      <img
+        mat-card-image
+        src="{{ post().imageUrl }}"
+        alt="Photo of a Shiba Inu"
+      />
+    }
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-icon-button>
+      <mat-icon>favorite</mat-icon>
+    </button>
+  </mat-card-actions>
 </mat-card>

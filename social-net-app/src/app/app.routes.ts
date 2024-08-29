@@ -6,33 +6,33 @@ import { authGuard } from './core/guards/auth.guard';
 import { ForbiddenComponent } from './core/components/forbidden/forbidden.component';
 
 export const routes: Routes = [
-    {
-        path: 'login',
-        component: LoginComponent
-    },
-    {
-        path: '',
-        redirectTo:'/home',
-        pathMatch: 'full'
-      },
-      {
-        path: 'home',
-        component: HomeComponent ,
-        canActivate: [authGuard],
-        // data: {roles: ['ROLE_ADMIN','ROLE_USER']}
-      },
-      {
-        path: 'profile/:userId',
-        component: ProfileComponent ,
-        canActivate: [authGuard],
-        // data: {roles: ['ROLE_ADMIN','ROLE_USER']}
-      },
-      {
-        path: '**',
-        redirectTo: '/home'
-      },
-      {
-        path: 'forbidden',
-        component: ForbiddenComponent
-      }
+  {
+    path: 'login',
+    component: LoginComponent,
+  },
+  {
+    path: '',
+    redirectTo: '/home',
+    pathMatch: 'full',
+  },
+  {
+    path: 'home',
+    component: HomeComponent,
+    canActivate: [authGuard],
+    // data: {roles: ['ROLE_ADMIN','ROLE_USER']}
+  },
+  {
+    path: 'profile/:userId',
+    component: ProfileComponent,
+    canActivate: [authGuard],
+    // data: {roles: ['ROLE_ADMIN','ROLE_USER']}
+  },
+  {
+    path: '**',
+    redirectTo: '/home',
+  },
+  {
+    path: 'forbidden',
+    component: ForbiddenComponent,
+  },
 ];

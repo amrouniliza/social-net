@@ -9,15 +9,13 @@ import { init } from './store/auth/actions/auth.actions';
   standalone: true,
   imports: [RouterOutlet, HeaderComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
   title = 'social-net-app';
   isLoggedin = false;
 
-  constructor(
-    private store: Store
-  ) {}
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
     this.store.dispatch(init());

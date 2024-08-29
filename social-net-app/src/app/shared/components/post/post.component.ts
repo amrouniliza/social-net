@@ -7,15 +7,10 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [
-    MatCardModule,
-    DateAgoPipe,
-    MatIcon
-  ],
+  imports: [MatCardModule, DateAgoPipe, MatIcon],
   templateUrl: './post.component.html',
-  styleUrl: './post.component.scss'
+  styleUrl: './post.component.scss',
 })
 export class PostComponent {
   post = input.required<Post>();
-
 }

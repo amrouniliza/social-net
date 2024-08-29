@@ -13,13 +13,10 @@ import { AuthEffects } from './store/auth/effects/auth.effects';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes), provideAnimationsAsync(),
-    provideHttpClient(
-      withInterceptors([
-        authInterceptor,
-      ])
-    ),
-    provideStore({ auth: authReducer}),
-    provideEffects([AuthEffects])
-  ]
+    provideRouter(routes),
+    provideAnimationsAsync(),
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideStore({ auth: authReducer }),
+    provideEffects([AuthEffects]),
+  ],
 };

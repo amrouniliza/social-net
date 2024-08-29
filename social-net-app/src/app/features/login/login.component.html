@@ -1,72 +1,87 @@
 <div class="h-full flex justify-center items-center">
-    <mat-card
-        appearance="outlined"
-        class="w-1/2 h-1/2 p-2"
+  <mat-card appearance="outlined" class="w-1/2 h-1/2 p-2">
+    <mat-tab-group
+      fitInkBarToContent
+      dynamicHeight
+      mat-stretch-tabs="false"
+      mat-align-tabs="center"
+      class="h-full"
     >
-        <mat-tab-group fitInkBarToContent dynamicHeight mat-stretch-tabs="false" mat-align-tabs="center" class="h-full">
-            <mat-tab label="Login" bodyClass="h-full">
-                <mat-card class=" px-16 flex flex-col justify-around h-full !shadow-none">
-                    <mat-card-content>
-                        <form [formGroup]="loginForm" (ngSubmit)="login()" class="flex flex-col">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Email</mat-label>
-                                <input matInput formControlName="email">
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Password</mat-label>
-                                <input matInput formControlName="password">
-                            </mat-form-field>
-                            <button type="submit" mat-flat-button>Sign In</button>
-                        </form>
-                        @if (errorMessage$ | async; as errorMessage ) {
-                            <div class="mt-10 p-4 rounded bg-red-300 border-red-500">
-                                <p>{{errorMessage}}</p>
-                            </div>
-                        }
-                    </mat-card-content>
-                    <mat-card-footer class="mx-auto">
-                        <div>
-                            Does not have an account yet ?
-                            <a 
-                                class="underline cursor-pointer text-tertiary-50 decoration-tertiary-50"
-                                routerLink="/register"
-                            >
-                                Register
-                            </a>
-                        </div>
-                        <div class="mx-auto">
-                            Forgot password ?
-                            <a
-                                class="underline cursor-pointer text-tertiary-50 decoration-tertiary-50"
-                                routerLink="/forgot-password"
-                            >
-                                Reset
-                            </a>
-                        </div>
-                    </mat-card-footer>
-                </mat-card>
-            </mat-tab>
-            <mat-tab label="Register">
-                <mat-card class=" px-16 flex flex-col justify-around h-full !shadow-none">
-                    <mat-card-content>
-                        <form [formGroup]="registerForm" (ngSubmit)="register()" class="flex flex-col">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Username</mat-label>
-                                <input matInput formControlName="username">
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Email</mat-label>
-                                <input matInput formControlName="email">
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Password</mat-label>
-                                <input matInput formControlName="password">
-                            </mat-form-field>
-                            <button type="submit" mat-flat-button>Register</button>
-                        </form>
-                    </mat-card-content>
-                </mat-card>
-            </mat-tab>
-        </mat-tab-group>
-    </mat-card>
+      <mat-tab label="Login" bodyClass="h-full">
+        <mat-card
+          class="px-16 flex flex-col justify-around h-full !shadow-none"
+        >
+          <mat-card-content>
+            <form
+              [formGroup]="loginForm"
+              (ngSubmit)="login()"
+              class="flex flex-col"
+            >
+              <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input matInput formControlName="password" />
+              </mat-form-field>
+              <button type="submit" mat-flat-button>Sign In</button>
+            </form>
+            @if (errorMessage$ | async; as errorMessage) {
+              <div class="mt-10 p-4 rounded bg-red-300 border-red-500">
+                <p>{{ errorMessage }}</p>
+              </div>
+            }
+          </mat-card-content>
+          <mat-card-footer class="mx-auto">
+            <div>
+              Does not have an account yet ?
+              <a
+                class="underline cursor-pointer text-tertiary-50 decoration-tertiary-50"
+                routerLink="/register"
+              >
+                Register
+              </a>
+            </div>
+            <div class="mx-auto">
+              Forgot password ?
+              <a
+                class="underline cursor-pointer text-tertiary-50 decoration-tertiary-50"
+                routerLink="/forgot-password"
+              >
+                Reset
+              </a>
+            </div>
+          </mat-card-footer>
+        </mat-card>
+      </mat-tab>
+      <mat-tab label="Register">
+        <mat-card
+          class="px-16 flex flex-col justify-around h-full !shadow-none"
+        >
+          <mat-card-content>
+            <form
+              [formGroup]="registerForm"
+              (ngSubmit)="register()"
+              class="flex flex-col"
+            >
+              <mat-form-field appearance="outline">
+                <mat-label>Username</mat-label>
+                <input matInput formControlName="username" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input matInput formControlName="password" />
+              </mat-form-field>
+              <button type="submit" mat-flat-button>Register</button>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
 </div>
