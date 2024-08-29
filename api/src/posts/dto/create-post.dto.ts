@@ -5,10 +5,6 @@ export class CreatePostDto {
   @IsString()
   content: string;
 
-  @IsString()
-  @IsOptional()
-  image?: string;
-
   @IsUUID()
   @IsNotEmpty()
   authorId: string;

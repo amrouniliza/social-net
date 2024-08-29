@@ -10,6 +10,8 @@ import {
   HttpStatus,
   NotFoundException,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -29,6 +31,8 @@ import {
   FilteringParams,
 } from 'src/common/decorators/filtering-params.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerConfig } from 'src/common/configs/multer.config';
 
 @Controller('posts')
 @UseGuards(JwtAuthGuard)
@@ -37,8 +41,10 @@ export class PostsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createPostDto: CreatePostDto): Promise<PostEntity> {
-    return this.postsService.create(createPostDto);
+  @UseInterceptors(FileInterceptor('file', multerConfig))
+
+  async create(@Body() createPostDto: CreatePostDto, @UploadedFile() file: Express.Multer.File): Promise<PostEntity> {
+    return this.postsService.create(createPostDto, file);
   }
 
   @Get()

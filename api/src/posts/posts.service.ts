@@ -12,6 +12,7 @@ import {
 import { Sorting } from 'src/common/decorators/sorting-params.decorator';
 import { Filtering } from 'src/common/decorators/filtering-params.decorator';
 import { getOrder, getWhere } from 'src/common/helpers/typeorm.helpers';
+import { AzureBlobService } from 'src/common/services/azure-blob.service';
 
 @Injectable()
 export class PostsService {
@@ -20,9 +21,10 @@ export class PostsService {
     private readonly postsRepository: Repository<PostEntity>,
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
+    private readonly azureBlobService: AzureBlobService
   ) {}
 
-  async create(createPostDto: CreatePostDto): Promise<PostEntity> {
+  async create(createPostDto: CreatePostDto, file: Express.Multer.File): Promise<PostEntity> {
     const author = await this.usersRepository.findOneBy({
       id: createPostDto.authorId,
     });
@@ -30,9 +32,12 @@ export class PostsService {
       throw new NotFoundException('Author not found');
     }
 
+    const blobUrl = await this.azureBlobService.uploadFile(file.path, file.filename);
+
     const newPost = this.postsRepository.create({
       ...createPostDto,
       author,
+      imageUrl: blobUrl,
     });
     return this.postsRepository.save(newPost);
   }

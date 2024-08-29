@@ -20,7 +20,7 @@ export class PostEntity implements Post {
   content: string;
 
   @Column({ nullable: true })
-  image: string;
+  imageUrl: string;
 
   @CreateDateColumn()
   createdAt: Date;

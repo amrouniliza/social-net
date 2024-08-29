@@ -110,7 +110,7 @@ export class AuthService {
     const payload: JwtPayload = { email: user.email, sub: user.id };
     const accessToken = this.jwtService.sign(payload, {
       secret: jwtConstants.access_token_secret,
-      expiresIn: '1m',
+      expiresIn: '1d',
     });
     const refreshToken = this.jwtService.sign(payload, {
       secret: jwtConstants.refresh_token_secret,
