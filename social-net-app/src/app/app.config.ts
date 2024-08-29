@@ -8,7 +8,9 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { authReducer } from './store/auth/reducers/auth.reducers';
+import { reducer } from './store/posts/reducers/posts.reducers';
 import { AuthEffects } from './store/auth/effects/auth.effects';
+import { PostsEffects } from './store/posts/effects/posts.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([authInterceptor])),
-    provideStore({ auth: authReducer }),
-    provideEffects([AuthEffects]),
+    provideStore({ auth: authReducer, post: reducer }),
+    provideEffects([AuthEffects, PostsEffects]),
   ],
 };

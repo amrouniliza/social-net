@@ -1,19 +1,22 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { NewPostForm, Post, User } from '../../models';
-import { AuthService } from '../../core/services/auth.service';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NewPostComponent } from '../../shared/components/new-post/new-post.component';
 import { FormGroup } from '@angular/forms';
-import { PostService } from '../../services/post.service';
-import { PostAddEmitterService } from '../../services/emitters/post-add-emitter.service';
 import { MatIconModule } from '@angular/material/icon';
 import { DateAgoPipe } from '../../shared/pipes/date-ago.pipe';
 import { PostComponent } from '../../shared/components/post/post.component';
+import { Store } from '@ngrx/store';
+import { selectAllPosts } from '../../store/posts/selectors/posts.selectors';
+import { CommonModule } from '@angular/common';
+import { postsActions } from '../../store/posts/actions/posts.actions';
+import { selectUser } from '../../store/auth/selectors/auth.selectors';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-profile',
@@ -24,6 +27,7 @@ import { PostComponent } from '../../shared/components/post/post.component';
     MatDividerModule,
     MatFormFieldModule,
     MatIconModule,
+    CommonModule,
     NewPostComponent,
     DateAgoPipe,
     PostComponent,
@@ -32,45 +36,44 @@ import { PostComponent } from '../../shared/components/post/post.component';
   styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit {
+  loggedInUser$!: Observable<User | null>;
   loggedInUser!: User;
-  AuthUserSub!: Subscription;
+  profileUser!: User;
   newPostForm!: FormGroup<NewPostForm>;
-  posts = signal<Post[]>([]); // Signal pour stocker la liste des posts
-
+  posts$!: Observable<Post[]>;
+  consultedProfileId!: string;
   constructor(
     private activatedRoute: ActivatedRoute,
-    private authService: AuthService,
-    private postService: PostService,
-    private postAddEmitter: PostAddEmitterService,
+    private userService: UserService,
+    private store: Store,
   ) {}
 
   ngOnInit(): void {
+    this.getRegisteredUser();
     this.activatedRoute.params.subscribe((params: Params) => {
-      this.getRegisteredUser();
-
-      if (params['userId'] !== this.loggedInUser.id)
-        this.getUserProfile(params['userId']);
+      this.consultedProfileId = params['userId'];
     });
-    if (this.loggedInUser?.id) this.getProfilePosts(this.loggedInUser.id);
+    this.getProfilePosts(this.consultedProfileId);
+    if (this.consultedProfileId === this.loggedInUser.id) {
+      this.getUserProfile(this.consultedProfileId);
+    } else {
+      this.profileUser = this.loggedInUser;
+    }
   }
 
   getRegisteredUser() {
-    this.AuthUserSub = this.authService.AuthenticatedUser$.subscribe({
-      next: (user) => {
-        if (user) this.loggedInUser = user;
-      },
-    });
+    this.loggedInUser$ = this.store.select(selectUser);
+    this.loggedInUser$.subscribe((user) => (this.loggedInUser = user!));
   }
 
   getUserProfile(id: string) {
-    // this.authService.getUserProfile(id).subscribe({
-    //   next : user => this.user = user
-    // })
+    this.userService.getUser(id).subscribe({
+      next: (user) => (this.profileUser = user),
+    });
   }
 
   getProfilePosts(userId: string) {
-    this.postService.getPostsByAuthor(userId).subscribe((posts: Post[]) => {
-      this.posts.set(posts); // Met à jour le signal avec la liste des posts
-    });
+    this.store.dispatch(postsActions.loadPostsByAuthor({ authorId: userId }));
+    this.posts$ = this.store.select(selectAllPosts);
   }
 }

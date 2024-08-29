@@ -11,8 +11,10 @@
     <app-new-post [user]="loggedInUser"></app-new-post>
 
     <div class="flex flex-col gap-4 mx-12 mt-4">
-      @for (post of posts(); track $index) {
+      @for (post of posts$ | async; track $index) {
         <app-post [post]="post"></app-post>
+      } @empty {
+        <p>No results yet!</p>
       }
     </div>
   </div>

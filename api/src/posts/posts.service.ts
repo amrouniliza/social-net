@@ -50,6 +50,7 @@ export class PostsService {
       order,
       take: limit,
       skip: offset,
+      relations: { author: true },
     });
 
     return {

@@ -24,6 +24,12 @@ export class PostService {
     });
   }
 
+  getPosts(): Observable<any> {
+    return this.http.get<Post[]>(`${this.apiUrl}`, {
+      withCredentials: true,
+    });
+  }
+
   getPostsByAuthor(authorId: string): Observable<Post[]> {
     return this.http.get<Post[]>(`${this.apiUrl}/author/${authorId}`, {
       withCredentials: true,
@@ -40,6 +46,8 @@ export class PostService {
   }
 
   deletePost(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, {
+      withCredentials: true,
+    });
   }
 }

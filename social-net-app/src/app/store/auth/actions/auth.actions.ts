@@ -1,17 +1,18 @@
 import { createAction, props } from '@ngrx/store';
 import { HttpError, User } from '../../../models';
 
+// prettier-ignore
 export enum AuthActionTypes {
-  INIT = '[App] Init',
-  INIT_FAILURE = '[App] Init Failure',
-  LOGIN = '[Auth] Login',
-  SIGNUP = '[Auth] Signup',
-  LOAD_USER = '[Auth] Load User',
-  AUTH_SUCCESS = '[Auth] Auth Success',
-  AUTH_FAILURE = '[Auth] Auth Failure',
+  INIT          = '[App] Init',
+  INIT_FAILURE  = '[App] Init Failure',
+  LOGIN         = '[Auth] Login',
+  SIGNUP        = '[Auth] Signup',
+  LOAD_USER     = '[Auth] Load User',
+  AUTH_SUCCESS  = '[Auth] Auth Success',
+  AUTH_FAILURE  = '[Auth] Auth Failure',
   REFRESH_TOKEN = '[Auth] Refresh Token',
-  LOGOUT = '[Auth] Logout',
-  GET_STATUS = '[Auth] GetStatus',
+  LOGOUT        = '[Auth] Logout',
+  GET_STATUS    = '[Auth] GetStatus',
 }
 
 export const init = createAction(AuthActionTypes.INIT);
