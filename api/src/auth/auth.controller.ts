@@ -18,7 +18,10 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { Response } from 'express';
 import { RefreshJwtAuthGuard } from './guards/refresh-jwt-auth.guard';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { SignInDto } from './dto/signin.dto';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -31,6 +34,7 @@ export class AuthController {
     return this.usersService.create(user);
   }
 
+  @ApiBody({ type: SignInDto })
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('login')
