@@ -8,12 +8,14 @@ import { AuthToken, JwtPayload } from './interfaces';
 import { jwtConstants } from './constants';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { AzureBlobService } from 'src/common/services/azure-blob.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private azureBlobService: AzureBlobService
   ) {}
 
 
@@ -33,8 +35,8 @@ export class AuthService {
       : null;
   }
 
-  async register(user: CreateUserDto, res: Response): Promise<AuthResponseDto> {
-    const createdUser = await this.usersService.create(user);
+  async register(user: CreateUserDto, file: Express.Multer.File, res: Response): Promise<AuthResponseDto> {
+    const createdUser = await this.usersService.create(user, file);
     const tokens = this.generateTokenPair(createdUser);
     this.storeTokensInCookies(res, tokens);
     return new AuthResponseDto('Registration successful');

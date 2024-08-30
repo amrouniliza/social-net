@@ -8,6 +8,8 @@ import {
   Get,
   Body,
   Res,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
@@ -21,6 +23,8 @@ import { RefreshJwtAuthGuard } from './guards/refresh-jwt-auth.guard';
 import { ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { SignInDto } from './dto/signin.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerConfig } from 'src/common/configs/multer.config';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -34,12 +38,14 @@ export class AuthController {
   @ApiCreatedResponse({ type: AuthResponseDto })
   @ApiConflictResponse()
   @HttpCode(HttpStatus.CREATED)
+  @UseInterceptors(FileInterceptor('file', multerConfig))
   @Post('register')
   register(
     @Body() user: CreateUserDto,
+    @UploadedFile() file: Express.Multer.File,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AuthResponseDto> {
-    return this.authService.register(user, res);
+    return this.authService.register(user, file, res);
   }
 
   @ApiBody({ type: SignInDto })

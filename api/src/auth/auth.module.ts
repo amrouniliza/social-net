@@ -7,10 +7,11 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh-jwt.strategy';
+import { AzureBlobService } from 'src/common/services/azure-blob.service';
 
 @Module({
   imports: [UsersModule, PassportModule, JwtModule.register({})],
-  providers: [AuthService, LocalStrategy, JwtStrategy, RefreshTokenStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, RefreshTokenStrategy, AzureBlobService],
   controllers: [AuthController],
 })
 export class AuthModule {}

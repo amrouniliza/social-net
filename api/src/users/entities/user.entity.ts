@@ -46,7 +46,7 @@ export class UserEntity implements User {
   password: string;
 
   @Column({ nullable: true })
-  profilePicture: string;
+  profilePictureUrl: string;
 
   @ApiProperty({
     example: 'I am a user',
