@@ -3,7 +3,8 @@ export interface User {
   username: string;
   email: string;
   password: string;
-  profilePictureUrl: string;
+  avatarUrl : string;
+  backgroundUrl : string;
   bio: string;
   createdAt: Date;
 }

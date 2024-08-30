@@ -46,7 +46,10 @@ export class UserEntity implements User {
   password: string;
 
   @Column({ nullable: true })
-  profilePictureUrl: string;
+  avatarUrl: string;
+  
+  @Column({ nullable: true })
+  backgroundUrl: string;
 
   @ApiProperty({
     example: 'I am a user',

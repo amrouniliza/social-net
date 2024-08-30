@@ -30,7 +30,7 @@ export class UsersService {
     const newUser = this.usersRepository.create({
       ...createUserDto,
       password: hashedPassword,
-      profilePictureUrl: blobUrl,
+      avatarUrl: blobUrl,
 
     });
     return this.usersRepository.save(newUser);
@@ -53,13 +53,16 @@ export class UsersService {
     return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto, file: Express.Multer.File) {
+  async update(id: string, updateUserDto: UpdateUserDto, avatar: Express.Multer.File, background: Express.Multer.File) {
     const user = await this.findOneById(id);
     Object.assign(user, updateUserDto);
-    console.log('file.filename :>> ', file.filename);
-    if (file) {
-      const blobUrl = await this.azureBlobService.uploadFile(file.path, file.filename);
-      user.profilePictureUrl = blobUrl;
+    if (avatar) {
+      const avatarBlobUrl = await this.azureBlobService.uploadFile(avatar.path, avatar.filename);
+      user.avatarUrl = avatarBlobUrl;
+    }
+    if (background) {
+      const backgroundBlobUrl = await this.azureBlobService.uploadFile(background.path, background.filename);
+      user.backgroundUrl = backgroundBlobUrl;
     }
     return this.usersRepository.save(user);
   }

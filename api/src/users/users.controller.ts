@@ -9,12 +9,13 @@ import {
   HttpCode,
   UseInterceptors,
   UploadedFile,
+  UploadedFiles,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/common/configs/multer.config';
 
 @Controller('users')
@@ -37,14 +38,21 @@ export class UsersController {
     return this.usersService.findOneById(id);
   }
 
-  @UseInterceptors(FileInterceptor('file', multerConfig))
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'avatar', maxCount: 1 },
+    { name: 'background', maxCount: 1 },
+  ], multerConfig))
+  // @UseInterceptors(FileInterceptor('avatar', multerConfig))
+  // @UseInterceptors(FileInterceptor('background', multerConfig))
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
-    @UploadedFile() file: Express.Multer.File,
+    // @UploadedFile() avatar: Express.Multer.File,
+    // @UploadedFile() background: Express.Multer.File,
+    @UploadedFiles() files: { avatar?: Express.Multer.File[], background?: Express.Multer.File[] }
   ): Promise<UserEntity> {
-    return this.usersService.update(id, updateUserDto, file);
+    return this.usersService.update(id, updateUserDto, files.avatar[0], files.background[0]);
   }
 
   @Delete(':id')

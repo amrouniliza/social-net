@@ -1,6 +1,10 @@
 <mat-card>
   <mat-card-header>
-    <div mat-card-avatar></div>
+    <div
+      class="bg-center bg-contain"
+      mat-card-avatar
+      [ngStyle]="{ 'background-image': 'url(' + post().author.avatarUrl + ')' }"
+    ></div>
     <mat-card-title>{{ post().author.username }}</mat-card-title>
     <mat-card-subtitle>{{ post().createdAt | dateAgo }}</mat-card-subtitle>
   </mat-card-header>

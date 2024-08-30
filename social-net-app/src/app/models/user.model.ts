@@ -3,6 +3,7 @@ export interface User {
   email?: string;
   username?: string;
   password?: string;
-  profilePictureUrl?: string;
+  avatarUrl?: string;
+  backgroundUrl?: string;
   bio?: string;
 }
