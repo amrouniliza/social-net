@@ -1,18 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap, switchMap, of } from 'rxjs';
+import { Observable, tap, switchMap, of } from 'rxjs';
 import { StorageService } from '../../services/storage.service';
 import { User } from '../../models';
 import { Store } from '@ngrx/store';
 import { selectUserIsLogged } from '../../store/auth/selectors/auth.selectors';
+import { CreateUserDto } from '../../models/createUserDto.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private readonly apiUrl = 'http://localhost:3000';
-
-  AuthenticatedUser$ = new BehaviorSubject<User | null>(null);
 
   constructor(
     private http: HttpClient,
@@ -59,7 +58,6 @@ export class AuthService {
     return this.http
       .get<User>(`${this.apiUrl}/auth/me`, { withCredentials: true })
       .pipe(
-        tap((user) => console.log(user)),
         switchMap((user) => {
           this.storageService.saveUser(user);
           return of(user);
@@ -73,12 +71,10 @@ export class AuthService {
    * @param {User} user - The user object to be registered.
    * @return {Observable<User>} An observable that resolves to the registered user.
    */
-  register(user: User): Observable<User> {
-    return this.http
-      .post<User>(`${this.apiUrl}/auth/register`, user, {
-        withCredentials: true,
-      })
-      .pipe(tap(() => this.AuthenticatedUser$.next(user)));
+  register(user: CreateUserDto): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/auth/register`, user, {
+      withCredentials: true,
+    });
   }
 
   /**
@@ -92,7 +88,6 @@ export class AuthService {
       .pipe(
         tap(() => {
           this.storageService.clean();
-          this.AuthenticatedUser$.next(null);
         }),
       );
   }

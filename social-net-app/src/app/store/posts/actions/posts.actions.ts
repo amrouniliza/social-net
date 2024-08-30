@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { HttpError, Post } from '../../../models';
+import { CreatePostDto, HttpError, Post } from '../../../models';
 
 // prettier-ignore
 export enum PostActionTypes {
@@ -67,7 +67,7 @@ export const loadPostFailure = createAction(
 
 export const createPost = createAction(
   PostActionTypes.CREATE_POST,
-  props<{ post: Post }>(),
+  props<{ post: CreatePostDto }>(),
 );
 
 export const createPostSuccess = createAction(

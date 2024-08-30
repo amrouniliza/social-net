@@ -15,6 +15,8 @@ export const adapter: EntityAdapter<Post> = createEntityAdapter<Post>({
   //   selectId: (post) => post.id,
 });
 
+const { selectAll } = adapter.getSelectors();
+
 export interface PostPartialState {
   readonly [POST_FEATURE_KEY]: State;
 }
@@ -40,13 +42,15 @@ const _reducer = createReducer(
     return { ...state, error };
   }),
   on(postsActions.loadPostSuccess, (state, { post }) => {
-    return adapter.upsertOne(post, state);
+    // return adapter.setAll([post, ...selectAll(state)], { ...state });
+    return adapter.addOne(post, state);
   }),
   on(postsActions.loadPostFailure, (state, { error }): State => {
     return { ...state, error };
   }),
   on(postsActions.createPostSuccess, (state, { post }) => {
-    return adapter.addOne(post, state);
+    // return adapter.addOne(post, state);
+    return adapter.setAll([post, ...selectAll(state)], { ...state });
   }),
   on(postsActions.createPostFailure, (state, { error }): State => {
     return { ...state, error };

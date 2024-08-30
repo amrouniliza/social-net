@@ -69,6 +69,7 @@ export class PostsService {
   async findAllByAuthor(authorId: string): Promise<PostEntity[]> {
     const posts = await this.postsRepository.find({
       where: { author: { id: authorId } },
+      order: { createdAt: 'DESC' },
       relations: { author: true },
     });
     if (posts.length === 0) {

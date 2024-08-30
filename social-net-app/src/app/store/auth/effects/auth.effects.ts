@@ -97,10 +97,9 @@ export class AuthEffects {
       return this.actions$.pipe(
         ofType(AuthActionTypes.LOGOUT),
         switchMap(() =>
-          this.authService.logout().pipe(
-            map(() => this.router.navigate(['/login'])),
-            tap(() => console.log('Logout')),
-          ),
+          this.authService
+            .logout()
+            .pipe(map(() => this.router.navigate(['/login']))),
         ),
       );
     },

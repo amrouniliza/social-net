@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { HttpError, User } from '../../../models';
+import { CreateUserDto } from '../../../models/createUserDto.model';
 
 // prettier-ignore
 export enum AuthActionTypes {
@@ -38,7 +39,7 @@ export const authFailure = createAction(
 
 export const signUp = createAction(
   AuthActionTypes.SIGNUP,
-  props<{ user: User }>(),
+  props<{ user: CreateUserDto }>(),
 );
 
 export const refreshToken = createAction(AuthActionTypes.REFRESH_TOKEN);

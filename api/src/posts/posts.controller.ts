@@ -41,7 +41,7 @@ export class PostsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @UseInterceptors(FileInterceptor('file', multerConfig))
+  @UseInterceptors(FileInterceptor('imageFile', multerConfig))
 
   async create(@Body() createPostDto: CreatePostDto, @UploadedFile() file: Express.Multer.File): Promise<PostEntity> {
     return this.postsService.create(createPostDto, file);

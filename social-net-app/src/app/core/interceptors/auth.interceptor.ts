@@ -4,7 +4,7 @@ import {
   HttpStatusCode,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, retry, switchMap, tap, throwError } from 'rxjs';
+import { catchError, retry, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { HttpError } from '../../models';

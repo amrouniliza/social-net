@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Post } from '../models';
+import { CreatePostDto, Post } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +12,23 @@ export class PostService {
 
   constructor(private http: HttpClient) {}
 
-  createPost(postData: Omit<Post, 'id' | 'imageUrl'>): Observable<Post> {
-    return this.http.post<Post>(this.apiUrl, postData, {
+  createPost(postData: CreatePostDto): Observable<Post> {
+    const formData = new FormData();
+    // transforme l'objet postData en FormData
+    if (
+      postData &&
+      typeof postData === 'object' &&
+      !(postData instanceof Date) &&
+      !(postData instanceof File) &&
+      !(postData instanceof Blob)
+    ) {
+      Object.keys(postData).reduce((formData, key) => {
+        formData.append(key, postData[key]);
+        return formData;
+      }, formData);
+    }
+
+    return this.http.post<Post>(this.apiUrl, formData, {
       withCredentials: true,
     });
   }

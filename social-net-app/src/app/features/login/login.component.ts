@@ -15,10 +15,14 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Observable, Subscription } from 'rxjs';
 import { MatTabsModule } from '@angular/material/tabs';
-import { Credentials, User } from '../../models';
+import { Credentials } from '../../models';
 import { Store } from '@ngrx/store';
 import { login, signUp } from '../../store/auth/actions/auth.actions';
 import { selectError } from '../../store/auth/selectors/auth.selectors';
+import {
+  CreateUserDto,
+  CreateUserDtoForm,
+} from '../../models/createUserDto.model';
 
 @Component({
   selector: 'app-login',
@@ -54,10 +58,10 @@ export class LoginComponent implements OnInit, OnDestroy {
       password: ['', Validators.required],
     });
 
-    this.registerForm = this.fb.group({
-      username: ['', Validators.required],
-      email: ['', Validators.required],
-      password: ['', Validators.required],
+    this.registerForm = this.fb.group<CreateUserDtoForm>({
+      username: this.fb.control('', Validators.required),
+      email: this.fb.control('', Validators.required),
+      password: this.fb.control('', Validators.required),
     });
 
     this.errorMessage$ = this.store.select(selectError);
@@ -82,7 +86,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   register() {
-    const user: User = {
+    const user: CreateUserDto = {
       username: this.registerForm.get('username')?.value,
       email: this.registerForm.get('email')?.value,
       password: this.registerForm.get('password')?.value,
