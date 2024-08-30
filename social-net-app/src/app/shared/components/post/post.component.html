@@ -6,7 +6,9 @@
       [ngStyle]="{ 'background-image': 'url(' + post().author.avatarUrl + ')' }"
     ></div>
     <mat-card-title>{{ post().author.username }}</mat-card-title>
-    <mat-card-subtitle>{{ post().createdAt | dateAgo }}</mat-card-subtitle>
+    <mat-card-subtitle class="!font-thin">{{
+      post().createdAt | dateAgo
+    }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     {{ post().content }}
