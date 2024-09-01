@@ -4,7 +4,6 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostEntity } from './entities/post.entity';
 import { Repository } from 'typeorm';
-import { UserEntity } from 'src/users/entities/user.entity';
 import {
   PaginatedResource,
   Pagination,
@@ -13,24 +12,20 @@ import { Sorting } from 'src/common/decorators/sorting-params.decorator';
 import { Filtering } from 'src/common/decorators/filtering-params.decorator';
 import { getOrder, getWhere } from 'src/common/helpers/typeorm.helpers';
 import { AzureBlobService } from 'src/common/services/azure-blob.service';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectRepository(PostEntity)
     private readonly postsRepository: Repository<PostEntity>,
-    @InjectRepository(UserEntity)
-    private readonly usersRepository: Repository<UserEntity>,
-    private readonly azureBlobService: AzureBlobService
+    private readonly azureBlobService: AzureBlobService,
+    private readonly usersService: UsersService
   ) {}
 
   async create(createPostDto: CreatePostDto, file: Express.Multer.File): Promise<PostEntity> {
-    const author = await this.usersRepository.findOneBy({
-      id: createPostDto.authorId,
-    });
-    if (!author) {
-      throw new NotFoundException('Author not found');
-    }
+
+    const author = await this.usersService.findOneById(createPostDto.authorId);
 
     const blobUrl = await this.azureBlobService.uploadFile(file.path, file.filename);
 
@@ -91,12 +86,7 @@ export class PostsService {
   async update(id: string, updatePostDto: UpdatePostDto): Promise<PostEntity> {
     const post = await this.findOneById(id);
     if (updatePostDto.authorId) {
-      const author = await this.usersRepository.findOneBy({
-        id: updatePostDto.authorId,
-      });
-      if (!author) {
-        throw new NotFoundException('Author not found');
-      }
+      const author = await this.usersService.findOneById(updatePostDto.authorId);
       updatePostDto.authorId = author.id;
     }
     Object.assign(post, updatePostDto);

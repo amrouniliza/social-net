@@ -1,26 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateLikeDto } from './dto/create-like.dto';
-import { UpdateLikeDto } from './dto/update-like.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { LikeEntity } from './entities/like.entity';
+import { PostsService } from 'src/posts/posts.service';
 
 @Injectable()
 export class LikesService {
-  create(createLikeDto: CreateLikeDto) {
-    return 'This action adds a new like';
+  constructor(
+    @InjectRepository(LikeEntity)
+    private readonly likesRepository: Repository<LikeEntity>,
+    private readonly postService: PostsService
+  ) {}
+  async create(createLikeDto: CreateLikeDto) {
+    const post = await this.postService.findOneById(createLikeDto.postId);
+    const likeExists = await this.findOneByUserAndPost(createLikeDto.userId, createLikeDto.postId);
+    if (likeExists) {
+      throw new BadRequestException('You already liked this post');
+    }
+    const newLike = this.likesRepository.create({
+      user: { id: createLikeDto.userId },
+      post
+    });
+    return this.likesRepository.save(newLike);
   }
 
   findAll() {
-    return `This action returns all likes`;
+    return this.likesRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} like`;
+  findOneByUserAndPost(userId: string, postId: string) {
+    return this.likesRepository.findOne({
+      where: {
+        user: { id: userId },
+        post: { id: postId }
+      }});
   }
 
-  update(id: number, updateLikeDto: UpdateLikeDto) {
-    return `This action updates a #${id} like`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} like`;
+  async remove(userId: string, postId: string): Promise<void> {
+    const like = await this.findOneByUserAndPost(userId, postId);
+    await this.likesRepository.remove(like);
   }
 }

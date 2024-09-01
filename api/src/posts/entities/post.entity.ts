@@ -1,4 +1,4 @@
-import { Like } from 'src/likes/entities/like.entity';
+import { LikeEntity } from 'src/likes/entities/like.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
 import {
@@ -31,6 +31,6 @@ export class PostEntity implements Post {
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 
-  @OneToMany(() => Like, (like) => like.post)
-  likes: Like[];
+  @OneToMany(() => LikeEntity, (like) => like.post)
+  likes: LikeEntity[];
 }
