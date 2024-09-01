@@ -3,7 +3,7 @@ import { PostsController } from './posts.controller';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { PostEntity } from './entities/post.entity';
+import { Post } from './entities/post.entity';
 import { NotFoundException } from '@nestjs/common';
 
 describe('PostsController', () => {
@@ -41,7 +41,7 @@ describe('PostsController', () => {
         content: 'Test content',
         authorId: '1',
       };
-      const createdPost = new PostEntity();
+      const createdPost = new Post();
       jest.spyOn(service, 'create').mockResolvedValue(createdPost);
 
       const result = await controller.create(createPostDto);
@@ -53,7 +53,7 @@ describe('PostsController', () => {
 
   describe('findAll', () => {
     it('should return an array of posts', async () => {
-      const posts = [new PostEntity(), new PostEntity()];
+      const posts = [new Post(), new Post()];
       jest.spyOn(service, 'findAll').mockResolvedValue(posts);
 
       const result = await controller.findAll();
@@ -64,7 +64,7 @@ describe('PostsController', () => {
 
   describe('findOneById', () => {
     it('should return a post if found', async () => {
-      const post = new PostEntity();
+      const post = new Post();
       jest.spyOn(service, 'findOneById').mockResolvedValue(post);
 
       const result = await controller.findOneById('1');
@@ -84,7 +84,7 @@ describe('PostsController', () => {
   describe('update', () => {
     it('should update a post and return it', async () => {
       const updatePostDto: UpdatePostDto = { content: 'Updated contentw' };
-      const updatedPost = new PostEntity();
+      const updatedPost = new Post();
       jest.spyOn(service, 'update').mockResolvedValue(updatedPost);
 
       const result = await controller.update('1', updatePostDto);

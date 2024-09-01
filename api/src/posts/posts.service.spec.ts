@@ -1,28 +1,28 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PostsService } from './posts.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { PostEntity } from './entities/post.entity';
+import { Post } from './entities/post.entity';
 import { User } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 
 describe('PostsService', () => {
   let service: PostsService;
-  let postRepository: Repository<PostEntity>;
+  let postRepository: Repository<Post>;
   let userRepository: Repository<User>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PostsService,
-        { provide: getRepositoryToken(PostEntity), useClass: Repository },
+        { provide: getRepositoryToken(Post), useClass: Repository },
         { provide: getRepositoryToken(User), useClass: Repository },
       ],
     }).compile();
 
     service = module.get<PostsService>(PostsService);
-    postRepository = module.get<Repository<PostEntity>>(
-      getRepositoryToken(PostEntity),
+    postRepository = module.get<Repository<Post>>(
+      getRepositoryToken(Post),
     );
     userRepository = module.get<Repository<User>>(
       getRepositoryToken(User),
@@ -40,7 +40,7 @@ describe('PostsService', () => {
         authorId: '1',
       };
       const author = new User({ username: 'john' });
-      const createdPost = new PostEntity();
+      const createdPost = new Post();
 
       jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(author);
       jest.spyOn(postRepository, 'create').mockReturnValue(createdPost);
@@ -75,7 +75,7 @@ describe('PostsService', () => {
 
   describe('findAll', () => {
     it('should return an array of posts', async () => {
-      const posts = [new PostEntity(), new PostEntity()];
+      const posts = [new Post(), new Post()];
 
       jest.spyOn(postRepository, 'find').mockResolvedValue(posts);
 
@@ -87,7 +87,7 @@ describe('PostsService', () => {
 
   describe('findOneById', () => {
     it('should return a post if found', async () => {
-      const post = new PostEntity();
+      const post = new Post();
 
       jest.spyOn(postRepository, 'findOneBy').mockResolvedValue(post);
 
@@ -105,7 +105,7 @@ describe('PostsService', () => {
 
   describe('update', () => {
     it('should update a post and return it', async () => {
-      const post = new PostEntity();
+      const post = new Post();
       const updatePostDto = { content: 'Updated content' };
 
       jest.spyOn(service, 'findOneById').mockResolvedValue(post);
@@ -131,7 +131,7 @@ describe('PostsService', () => {
     });
 
     it('should throw NotFoundException if author not found', async () => {
-      const post = new PostEntity();
+      const post = new Post();
       const updatePostDto = { title: 'Updated title', authorId: '2' };
 
       jest.spyOn(service, 'findOneById').mockResolvedValue(post);
@@ -145,7 +145,7 @@ describe('PostsService', () => {
 
   describe('remove', () => {
     it('should remove a post if found', async () => {
-      const post = new PostEntity();
+      const post = new Post();
 
       jest.spyOn(service, 'findOneById').mockResolvedValue(post);
       jest.spyOn(postRepository, 'remove').mockResolvedValue(post);

@@ -1,6 +1,6 @@
 import { Friendship } from 'src/friendships/entities/friendship.entity';
 import { LikeEntity } from 'src/likes/entities/like.entity';
-import { PostEntity } from 'src/posts/entities/post.entity';
+import { Post } from 'src/posts/entities/post.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
 import {
   Entity,
@@ -59,8 +59,8 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   bio: string | null;
 
-  @OneToMany(() => PostEntity, (post) => post.author)
-  posts: PostEntity[];
+  @OneToMany(() => Post, (post) => post.author)
+  posts: Post[];
 
   @OneToMany(() => Comment, (comment) => comment.author)
   comments: Comment[];

@@ -8,11 +8,11 @@ import {
   ManyToOne,
   OneToMany,
   CreateDateColumn,
+  BaseEntity,
 } from 'typeorm';
-import { Post } from '../interfaces/post';
 
 @Entity()
-export class PostEntity implements Post {
+export class Post extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

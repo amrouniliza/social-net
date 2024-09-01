@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, Unique } from 'typeorm';
-import { PostEntity } from 'src/posts/entities/post.entity';
+import { Post } from 'src/posts/entities/post.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @Entity()
@@ -11,6 +11,6 @@ export class LikeEntity {
   @ManyToOne(() => User, (user) => user.likes, { onDelete: 'CASCADE' })
   user: User;
 
-  @ManyToOne(() => PostEntity, (post) => post.likes, { onDelete: 'CASCADE' })
-  post: PostEntity;
+  @ManyToOne(() => Post, (post) => post.likes, { onDelete: 'CASCADE' })
+  post: Post;
 }

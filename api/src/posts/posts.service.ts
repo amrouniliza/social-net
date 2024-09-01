@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PostEntity } from './entities/post.entity';
+import { Post } from './entities/post.entity';
 import { Repository } from 'typeorm';
 import {
   PaginatedResource,
@@ -17,13 +17,13 @@ import { UsersService } from 'src/users/users.service';
 @Injectable()
 export class PostsService {
   constructor(
-    @InjectRepository(PostEntity)
-    private readonly postsRepository: Repository<PostEntity>,
+    @InjectRepository(Post)
+    private readonly postsRepository: Repository<Post>,
     private readonly azureBlobService: AzureBlobService,
     private readonly usersService: UsersService
   ) {}
 
-  async create(createPostDto: CreatePostDto, file: Express.Multer.File): Promise<PostEntity> {
+  async create(createPostDto: CreatePostDto, file: Express.Multer.File): Promise<Post> {
 
     const author = await this.usersService.findOneById(createPostDto.authorId);
 
@@ -41,7 +41,7 @@ export class PostsService {
     { page, limit, size, offset }: Pagination,
     sort?: Sorting,
     filter?: Filtering,
-  ): Promise<PaginatedResource<PostEntity>> {
+  ): Promise<PaginatedResource<Post>> {
     const where = getWhere(filter);
     const order = getOrder(sort);
 
@@ -61,7 +61,7 @@ export class PostsService {
     };
   }
 
-  async findAllByAuthor(authorId: string): Promise<PostEntity[]> {
+  async findAllByAuthor(authorId: string): Promise<Post[]> {
     const posts = await this.postsRepository.find({
       where: { author: { id: authorId } },
       order: { createdAt: 'DESC' },
@@ -75,7 +75,7 @@ export class PostsService {
     return posts;
   }
 
-  async findOneById(id: string): Promise<PostEntity> {
+  async findOneById(id: string): Promise<Post> {
     const post = await this.postsRepository.findOneBy({ id });
     if (!post) {
       throw new NotFoundException(`Post with id ${id} not found`);
@@ -83,7 +83,7 @@ export class PostsService {
     return post;
   }
 
-  async update(id: string, updatePostDto: UpdatePostDto): Promise<PostEntity> {
+  async update(id: string, updatePostDto: UpdatePostDto): Promise<Post> {
     const post = await this.findOneById(id);
     if (updatePostDto.authorId) {
       const author = await this.usersService.findOneById(updatePostDto.authorId);
