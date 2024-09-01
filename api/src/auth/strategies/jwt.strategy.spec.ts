@@ -3,20 +3,20 @@ import { JwtStrategy } from './jwt.strategy';
 import { UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtPayload, ValidatedUser } from '../interfaces';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('JwtStrategy', () => {
   let jwtStrategy: JwtStrategy;
   let usersService: UsersService;
-  let userRepository: Repository<UserEntity>;
+  let userRepository: Repository<User>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         JwtStrategy,
-        { provide: getRepositoryToken(UserEntity), useClass: Repository },
+        { provide: getRepositoryToken(User), useClass: Repository },
         {
           provide: UsersService,
           useValue: {
@@ -28,8 +28,8 @@ describe('JwtStrategy', () => {
 
     jwtStrategy = module.get<JwtStrategy>(JwtStrategy);
     usersService = module.get<UsersService>(UsersService);
-    userRepository = module.get<Repository<UserEntity>>(
-      getRepositoryToken(UserEntity),
+    userRepository = module.get<Repository<User>>(
+      getRepositoryToken(User),
     );
   });
 
@@ -45,7 +45,7 @@ describe('JwtStrategy', () => {
         iat: 1,
         exp: 2,
       };
-      const user = new UserEntity({ id: '1', email: 'test@example.com' });
+      const user = new User({ id: '1', email: 'test@example.com' });
       const validatedUser: ValidatedUser = {
         id: '1',
         email: 'test@example.com',

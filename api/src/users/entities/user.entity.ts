@@ -11,20 +11,21 @@ import {
   JoinTable,
   Unique,
   CreateDateColumn,
+  BaseEntity,
+  UpdateDateColumn,
 } from 'typeorm';
-import { Exclude, instanceToPlain } from 'class-transformer';
-import { User } from 'src/users/interfaces';
+import { Exclude } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-@Entity()
+@Entity('user_entity')
 @Unique(['email'])
-export class UserEntity implements User {
+export class User extends BaseEntity {
   @ApiProperty({
     example: 'a7d8b6a3-32d1-4c0a-b5e7-8e0f0b1b2b3b',
     description: 'The id of the user',
   })
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @ApiProperty({
     example: 'JohnDoe',
@@ -46,17 +47,17 @@ export class UserEntity implements User {
   password: string;
 
   @Column({ nullable: true })
-  avatarUrl: string;
+  avatarUrl: string | null;
   
   @Column({ nullable: true })
-  backgroundUrl: string;
+  backgroundUrl: string | null;
 
   @ApiProperty({
     example: 'I am a user',
     description: 'The bio of the user',
   })
   @Column({ nullable: true })
-  bio: string;
+  bio: string | null;
 
   @OneToMany(() => PostEntity, (post) => post.author)
   posts: PostEntity[];
@@ -67,9 +68,9 @@ export class UserEntity implements User {
   @OneToMany(() => LikeEntity, (like) => like.user)
   likes: LikeEntity[];
 
-  @ManyToMany(() => UserEntity, (user) => user.friends)
+  @ManyToMany(() => User, (user) => user.friends)
   @JoinTable()
-  friends: UserEntity[];
+  friends: User[];
 
   @OneToMany(() => Friendship, (friendship) => friendship.user)
   friendships: Friendship[];
@@ -80,11 +81,6 @@ export class UserEntity implements User {
   @CreateDateColumn()
   createdAt: Date;
 
-  toJSON() {
-    return instanceToPlain(this);
-  }
-
-  constructor(partial: Partial<UserEntity>) {
-    Object.assign(this, partial);
-  }
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

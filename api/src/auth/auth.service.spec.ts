@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/interfaces';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import { JwtPayload } from './interfaces';
 import * as bcrypt from 'bcryptjs';
 
@@ -41,7 +41,7 @@ describe('AuthService', () => {
         id: '1',
         email: 'example@test.com',
         password: await bcrypt.hash('test', 10),
-      } as UserEntity;
+      } as User;
       (usersService.findOneByEmail as jest.Mock).mockResolvedValue(user);
 
       const result = await service.validateUser('example@test.com', 'test');

@@ -2,11 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserEntity } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ConflictException } from '@nestjs/common';
 
-const userMock = new UserEntity({
+const userMock = new User({
   id: 'some uuid',
   username: 'john',
   email: 'john.doe@test.com',

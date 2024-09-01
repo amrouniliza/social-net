@@ -2,21 +2,21 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PostsService } from './posts.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { PostEntity } from './entities/post.entity';
-import { UserEntity } from '../users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 
 describe('PostsService', () => {
   let service: PostsService;
   let postRepository: Repository<PostEntity>;
-  let userRepository: Repository<UserEntity>;
+  let userRepository: Repository<User>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PostsService,
         { provide: getRepositoryToken(PostEntity), useClass: Repository },
-        { provide: getRepositoryToken(UserEntity), useClass: Repository },
+        { provide: getRepositoryToken(User), useClass: Repository },
       ],
     }).compile();
 
@@ -24,8 +24,8 @@ describe('PostsService', () => {
     postRepository = module.get<Repository<PostEntity>>(
       getRepositoryToken(PostEntity),
     );
-    userRepository = module.get<Repository<UserEntity>>(
-      getRepositoryToken(UserEntity),
+    userRepository = module.get<Repository<User>>(
+      getRepositoryToken(User),
     );
   });
 
@@ -39,7 +39,7 @@ describe('PostsService', () => {
         content: 'Test content',
         authorId: '1',
       };
-      const author = new UserEntity({ username: 'john' });
+      const author = new User({ username: 'john' });
       const createdPost = new PostEntity();
 
       jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(author);

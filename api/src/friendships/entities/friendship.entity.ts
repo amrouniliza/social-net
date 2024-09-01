@@ -1,4 +1,4 @@
-import { UserEntity } from 'src/users/entities/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -11,11 +11,11 @@ export class Friendship {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => UserEntity, (user) => user.friendships)
-  user: UserEntity;
+  @ManyToOne(() => User, (user) => user.friendships)
+  user: User;
 
-  @ManyToOne(() => UserEntity, (user) => user.friendOf)
-  friend: UserEntity;
+  @ManyToOne(() => User, (user) => user.friendOf)
+  friend: User;
 
   @CreateDateColumn()
   createdAt: Date;

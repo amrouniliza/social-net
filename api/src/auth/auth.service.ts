@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { User } from 'src/users/interfaces';
 import { Response } from 'express';
 import { AuthToken, JwtPayload } from './interfaces';
 import { jwtConstants } from './constants';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AzureBlobService } from 'src/common/services/azure-blob.service';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {

@@ -1,5 +1,5 @@
 import { LikeEntity } from 'src/likes/entities/like.entity';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
 import {
   Entity,
@@ -25,8 +25,8 @@ export class PostEntity implements Post {
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.posts)
-  author: UserEntity;
+  @ManyToOne(() => User, (user) => user.posts)
+  author: User;
 
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { UserEntity } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 
@@ -19,22 +19,22 @@ type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 
 describe('UsersService', () => {
   let service: UsersService;
-  let repository: MockRepository<UserEntity>;
+  let repository: MockRepository<User>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
         {
-          provide: getRepositoryToken(UserEntity),
+          provide: getRepositoryToken(User),
           useFactory: mockUserRepository,
         },
       ],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
-    repository = module.get<MockRepository<UserEntity>>(
-      getRepositoryToken(UserEntity),
+    repository = module.get<MockRepository<User>>(
+      getRepositoryToken(User),
     );
   });
 
@@ -50,7 +50,7 @@ describe('UsersService', () => {
         password: 'password',
         bio: 'bio',
       };
-      const user = new UserEntity({ ...createUserDto });
+      const user = new User({ ...createUserDto });
 
       repository.existsBy.mockResolvedValue(false);
       repository.create.mockReturnValue(user);
@@ -61,7 +61,7 @@ describe('UsersService', () => {
       expect(repository.existsBy).toHaveBeenCalledWith({
         email: createUserDto.email,
       });
-      expect(result).toBeInstanceOf(UserEntity);
+      expect(result).toBeInstanceOf(User);
       expect(repository.create).toHaveBeenCalledWith(
         expect.objectContaining({
           username: createUserDto.username,
@@ -94,11 +94,11 @@ describe('UsersService', () => {
   describe('find all', () => {
     it('should return an array of users', async () => {
       const users = [
-        new UserEntity({
+        new User({
           username: 'testuser1',
           email: 'user1@test.com',
         }),
-        new UserEntity({
+        new User({
           username: 'testuser2',
           email: 'user2@test.com',
         }),
@@ -111,7 +111,7 @@ describe('UsersService', () => {
 
   describe('findOneById', () => {
     it('should return a user if found', () => {
-      const user = new UserEntity({
+      const user = new User({
         id: '1',
         username: 'usertest',
         email: 'user@test.com',
@@ -134,7 +134,7 @@ describe('UsersService', () => {
   describe('update', () => {
     it('should return a user updated', () => {
       const updateUserDto = { username: 'updatedUser' };
-      const user = new UserEntity({
+      const user = new User({
         id: '1',
         username: 'usertest',
         email: 'user@test.com',
@@ -160,7 +160,7 @@ describe('UsersService', () => {
   describe('remove', () => {
     it('should remove a user if found', async () => {
       const id = '1';
-      const user = new UserEntity({
+      const user = new User({
         id: id,
         username: 'usertest',
         email: 'user@test.com',

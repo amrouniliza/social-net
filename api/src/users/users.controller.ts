@@ -14,7 +14,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserEntity } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/common/configs/multer.config';
 
@@ -24,17 +24,17 @@ export class UsersController {
 
   @UseInterceptors(FileInterceptor('file', multerConfig))
   @Post()
-  async create(@Body() createUserDto: CreateUserDto, @UploadedFile() file: Express.Multer.File): Promise<UserEntity> {
+  async create(@Body() createUserDto: CreateUserDto, @UploadedFile() file: Express.Multer.File): Promise<User> {
     return this.usersService.create(createUserDto, file);
   }
 
   @Get()
-  async findAll(): Promise<UserEntity[]> {
+  async findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  async findOneById(@Param('id') id: string): Promise<UserEntity> {
+  async findOneById(@Param('id') id: string): Promise<User> {
     return this.usersService.findOneById(id);
   }
 
@@ -51,7 +51,7 @@ export class UsersController {
     // @UploadedFile() avatar: Express.Multer.File,
     // @UploadedFile() background: Express.Multer.File,
     @UploadedFiles() files: { avatar?: Express.Multer.File[], background?: Express.Multer.File[] }
-  ): Promise<UserEntity> {
+  ): Promise<User> {
     return this.usersService.update(id, updateUserDto, files.avatar[0], files.background[0]);
   }
 

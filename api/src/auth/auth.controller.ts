@@ -17,7 +17,7 @@ import { AuthenticatedRequest } from './interfaces';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import { Response } from 'express';
 import { RefreshJwtAuthGuard } from './guards/refresh-jwt-auth.guard';
 import { ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -80,7 +80,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiOkResponse({ type: UserEntity })
+  @ApiOkResponse({ type: User })
   @Get('me')
   getProfile(@Req() req: AuthenticatedRequest) {
     return this.usersService.findOneById(req.user.id);

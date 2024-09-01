@@ -6,7 +6,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { AzureBlobService } from 'src/common/services/azure-blob.service';
@@ -14,23 +14,23 @@ import { AzureBlobService } from 'src/common/services/azure-blob.service';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly usersRepository: Repository<UserEntity>,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
     private readonly azureBlobService: AzureBlobService
   ) {}
 
-  async create(createUserDto: CreateUserDto, file: Express.Multer.File): Promise<UserEntity> {
+  async create(createUserDto: CreateUserDto, file: Express.Multer.File): Promise<User> {
     const userExists = await this.usersRepository.existsBy({
       email: createUserDto.email,
     });
     if (userExists) throw new ConflictException('Email already exists');
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
-    const blobUrl = await this.azureBlobService.uploadFile(file.path, file.filename);
+    // const blobUrl = await this.azureBlobService.uploadFile(file.path, file.filename);
     const newUser = this.usersRepository.create({
       ...createUserDto,
       password: hashedPassword,
-      avatarUrl: blobUrl,
+      // avatarUrl: blobUrl,
 
     });
     return this.usersRepository.save(newUser);
