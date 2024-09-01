@@ -1,4 +1,4 @@
-import { LikeEntity } from 'src/likes/entities/like.entity';
+import { Like } from 'src/likes/entities/like.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
 import {
@@ -9,6 +9,7 @@ import {
   OneToMany,
   CreateDateColumn,
   BaseEntity,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -24,6 +25,9 @@ export class Post extends BaseEntity {
 
   @CreateDateColumn()
   createdAt: Date;
+  
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.posts)
   author: User;
@@ -31,6 +35,6 @@ export class Post extends BaseEntity {
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 
-  @OneToMany(() => LikeEntity, (like) => like.post)
-  likes: LikeEntity[];
+  @OneToMany(() => Like, (like) => like.post)
+  likes: Like[];
 }

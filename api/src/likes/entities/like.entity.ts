@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, Unique } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, Unique, BaseEntity, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Post } from 'src/posts/entities/post.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @Entity()
 @Unique(['user', 'post']) // Contraintes uniques
-export class LikeEntity {
+export class Like extends  BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -13,4 +13,10 @@ export class LikeEntity {
 
   @ManyToOne(() => Post, (post) => post.likes, { onDelete: 'CASCADE' })
   post: Post;
+
+  @CreateDateColumn()
+  createdAt: Date;
+  
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

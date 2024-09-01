@@ -1,5 +1,5 @@
 import { Friendship } from 'src/friendships/entities/friendship.entity';
-import { LikeEntity } from 'src/likes/entities/like.entity';
+import { Like } from 'src/likes/entities/like.entity';
 import { Post } from 'src/posts/entities/post.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
 import {
@@ -65,8 +65,8 @@ export class User extends BaseEntity {
   @OneToMany(() => Comment, (comment) => comment.author)
   comments: Comment[];
 
-  @OneToMany(() => LikeEntity, (like) => like.user)
-  likes: LikeEntity[];
+  @OneToMany(() => Like, (like) => like.user)
+  likes: Like[];
 
   @ManyToMany(() => User, (user) => user.friends)
   @JoinTable()

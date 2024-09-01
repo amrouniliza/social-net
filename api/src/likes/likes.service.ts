@@ -2,14 +2,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateLikeDto } from './dto/create-like.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { LikeEntity } from './entities/like.entity';
+import { Like } from './entities/like.entity';
 import { PostsService } from 'src/posts/posts.service';
 
 @Injectable()
 export class LikesService {
   constructor(
-    @InjectRepository(LikeEntity)
-    private readonly likesRepository: Repository<LikeEntity>,
+    @InjectRepository(Like)
+    private readonly likesRepository: Repository<Like>,
     private readonly postService: PostsService
   ) {}
   async create(createLikeDto: CreateLikeDto) {
