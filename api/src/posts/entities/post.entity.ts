@@ -12,7 +12,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity('post_entity')
 export class Post extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

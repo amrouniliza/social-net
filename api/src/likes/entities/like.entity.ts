@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, ManyToOne, Unique, BaseEntity, CreateDa
 import { Post } from 'src/posts/entities/post.entity';
 import { User } from 'src/users/entities/user.entity';
 
-@Entity()
+@Entity('like_entity')
 @Unique(['user', 'post']) // Contraintes uniques
 export class Like extends  BaseEntity {
   @PrimaryGeneratedColumn('uuid')

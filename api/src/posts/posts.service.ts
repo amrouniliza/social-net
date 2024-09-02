@@ -65,7 +65,7 @@ export class PostsService {
     const posts = await this.postsRepository.find({
       where: { author: { id: authorId } },
       order: { createdAt: 'DESC' },
-      relations: { author: true },
+      relations: { author: true, likes: true },
     });
     if (posts.length === 0) {
       throw new NotFoundException(

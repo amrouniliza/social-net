@@ -34,7 +34,8 @@ export class LikesService {
       where: {
         user: { id: userId },
         post: { id: postId }
-      }});
+      },
+      relations: ['user', 'post']});
   }
 
   async remove(userId: string, postId: string): Promise<void> {
