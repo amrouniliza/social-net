@@ -12,8 +12,10 @@
           'background-image': 'url(' + loggedInUser.avatarUrl + ')',
         }"
       ></div>
-      <div class="text-white">{{ loggedInUser.username }}</div>
-      <div class="text-white">{{ loggedInUser.email }}</div>
+      <div class="text-white backdrop-blur p-1">
+        {{ loggedInUser.username }}
+      </div>
+      <div class="text-white backdrop-blur p-1">{{ loggedInUser.email }}</div>
     </div>
   </div>
   <div class="grow pt-6">
