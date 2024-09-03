@@ -1,0 +1,20 @@
+<div class="flex gap-2">
+  <div
+    class="bg-center bg-contain"
+    mat-card-avatar
+    [ngStyle]="{
+      'background-image': 'url(' + authenticatedUser()?.avatarUrl + ')',
+    }"
+  ></div>
+  <form action="" [formGroup]="newCommentForm" class="flex-1">
+    <mat-form-field class="w-full" appearance="outline">
+      <textarea
+        #newCommentTextarea
+        formControlName="content"
+        class="!resize-none"
+        matInput
+        placeholder="Write a comment"
+      ></textarea>
+    </mat-form-field>
+  </form>
+</div>

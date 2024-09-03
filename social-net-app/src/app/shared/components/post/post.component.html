@@ -37,18 +37,24 @@
         <mat-icon>thumb_up</mat-icon>
         Like
       </button>
-      <button mat-button>
+      <button mat-button (click)="focusNewCommentTextArea()">
         <mat-icon>comment</mat-icon>
         Comment
       </button>
     </div>
     @if (post().comments.length > 0) {
       <mat-divider class="w-full !mt-2 !mb-2"></mat-divider>
-      <div class="w-full flex flex-col gap-4 mt-2">
+      <div class="w-full flex flex-col gap-4 mt-2 mb-2">
         @for (comment of post().comments; track $index) {
           <app-comment [comment]="comment"> ></app-comment>
         }
       </div>
     }
+    <mat-divider class="w-full !mt-2 !mb-2"></mat-divider>
+    <app-new-comment
+      class="w-full"
+      [authenticatedUser]="authenticatedUser()"
+      [post]="post()"
+    ></app-new-comment>
   </mat-card-actions>
 </mat-card>
