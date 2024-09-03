@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { PostService } from '../../../services/post.service';
-import { catchError, concatMap, map, mergeMap, of, switchMap, tap } from 'rxjs';
+import { catchError, map, mergeMap, of, switchMap } from 'rxjs';
 import { postsActions } from '../actions/posts.actions';
 import { Store } from '@ngrx/store';
 
@@ -104,13 +104,29 @@ export class PostsEffects {
   likePost$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(postsActions.likePost),
-      switchMap(({ id }) =>
-        this.postService.likePost(id).pipe(
-          map(() => {
-            return postsActions.likePostSuccess({ id });
+      switchMap(({ post }) =>
+        this.postService.likePost(post.id).pipe(
+          map((like) => {
+            return postsActions.likePostSuccess({ post, like });
           }),
           catchError((error) => {
             return of(postsActions.likePostFailure({ error }));
+          }),
+        ),
+      ),
+    );
+  });
+
+  unlikePost$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(postsActions.unlikePost),
+      switchMap(({ post, like }) =>
+        this.postService.unlikePost(post.id).pipe(
+          map(() => {
+            return postsActions.unlikePostSuccess({ post, like });
+          }),
+          catchError((error) => {
+            return of(postsActions.unlikePostFailure({ error }));
           }),
         ),
       ),

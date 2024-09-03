@@ -8,7 +8,6 @@ import {
   Signal,
 } from '@angular/core';
 import { Post, User } from '../../models';
-import { Observable } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
@@ -49,7 +48,7 @@ export class ProfileComponent implements OnInit {
   @Input() consultedProfileId!: string;
   authenticatedUser!: Signal<User | null>;
   profileUser!: Signal<User | null>;
-  posts$!: Observable<Post[]>;
+  $posts!: Signal<Post[]>;
 
   ngOnInit(): void {
     this.getAuthenticatedUser();
@@ -75,6 +74,6 @@ export class ProfileComponent implements OnInit {
 
   getProfilePosts(userId: string) {
     this.#store.dispatch(postsActions.loadPostsByAuthor({ authorId: userId }));
-    this.posts$ = this.#store.select(selectAllPosts);
+    this.$posts = this.#store.selectSignal(selectAllPosts);
   }
 }

@@ -74,7 +74,7 @@ export class PostService {
     );
   }
 
-  unlikePost(postId: number): Observable<void> {
+  unlikePost(postId: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${postId}/likes`, {
       withCredentials: true,
     });

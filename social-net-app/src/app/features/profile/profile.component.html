@@ -23,8 +23,12 @@
     <app-new-post [profileUser]="profileUser"></app-new-post>
 
     <div class="flex flex-col items-center w-1/2 gap-4 m-auto">
-      @for (post of posts$ | async; track $index) {
-        <app-post class="w-full" [post]="post"></app-post>
+      @for (post of $posts(); track $index) {
+        <app-post
+          class="w-full"
+          [post]="post"
+          [authenticatedUser]="authenticatedUser()"
+        ></app-post>
       } @empty {
         <p>No results yet!</p>
       }

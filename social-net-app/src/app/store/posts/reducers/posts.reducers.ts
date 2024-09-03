@@ -59,6 +59,33 @@ const _reducer = createReducer(
   on(postsActions.updatePostFailure, (state, { error }): State => {
     return { ...state, error };
   }),
+  on(postsActions.likePostSuccess, (state, { post, like }) => {
+    return adapter.updateOne(
+      {
+        id: post.id,
+        changes: { hasUserLiked: true, likes: [...post.likes, like] },
+      },
+      state,
+    );
+  }),
+  on(postsActions.likePostFailure, (state, { error }): State => {
+    return { ...state, error };
+  }),
+  on(postsActions.unlikePostSuccess, (state, { post, like }) => {
+    return adapter.updateOne(
+      {
+        id: post.id,
+        changes: {
+          hasUserLiked: false,
+          likes: post.likes.filter((l) => l.id !== like.id),
+        },
+      },
+      state,
+    );
+  }),
+  on(postsActions.unlikePostFailure, (state, { error }): State => {
+    return { ...state, error };
+  }),
   on(postsActions.deletePostSuccess, (state, { id }) => {
     return adapter.removeOne(id, state);
   }),

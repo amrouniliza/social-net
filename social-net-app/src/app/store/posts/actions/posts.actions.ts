@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { CreatePostDto, HttpError, Post } from '../../../models';
+import { CreatePostDto, HttpError, Like, Post } from '../../../models';
 
 // prettier-ignore
 export enum PostActionTypes {
@@ -18,6 +18,9 @@ export enum PostActionTypes {
   LIKE_POST                    = '[Posts] Like Post',
   LIKE_POST_SUCCESS            = '[Posts] Like Post Success',
   LIKE_POST_FAILURE            = '[Posts] Like Post Failure',
+  UNLIKE_POST                  = '[Posts] Unlike Post',
+  UNLIKE_POST_SUCCESS          = '[Posts] Unlike Post Success',
+  UNLIKE_POST_FAILURE          = '[Posts] Unlike Post Failure',
   UPDATE_POST                  = '[Posts] Update Post',
   UPDATE_POST_SUCCESS          = '[Posts] Update Post Success',
   UPDATE_POST_FAILURE          = '[Posts] Update Post Failure',
@@ -100,16 +103,31 @@ export const updatePostFailure = createAction(
 
 export const likePost = createAction(
   PostActionTypes.LIKE_POST,
-  props<{ id: string }>(),
+  props<{ post: Post }>(),
 );
 
 export const likePostSuccess = createAction(
   PostActionTypes.LIKE_POST_SUCCESS,
-  props<{ id: string }>(),
+  props<{ post: Post; like: Like }>(),
 );
 
 export const likePostFailure = createAction(
   PostActionTypes.LIKE_POST_FAILURE,
+  props<{ error: HttpError }>(),
+);
+
+export const unlikePost = createAction(
+  PostActionTypes.UNLIKE_POST,
+  props<{ post: Post; like: Like }>(),
+);
+
+export const unlikePostSuccess = createAction(
+  PostActionTypes.UNLIKE_POST_SUCCESS,
+  props<{ post: Post; like: Like }>(),
+);
+
+export const unlikePostFailure = createAction(
+  PostActionTypes.UNLIKE_POST_FAILURE,
   props<{ error: HttpError }>(),
 );
 
@@ -147,6 +165,9 @@ export const postsActions = {
   likePost,
   likePostSuccess,
   likePostFailure,
+  unlikePost,
+  unlikePostSuccess,
+  unlikePostFailure,
   deletePost,
   deletePostSuccess,
   deletePostFailure,
