@@ -35,15 +35,6 @@ export class LikesService {
         user: { id: userId },
         post: { id: postId }
       },
-      relations: {
-        post: true,
-        user: true
-      },
-      select: {
-        user: {
-          id: true,
-        }
-      }
     });
   }
 
