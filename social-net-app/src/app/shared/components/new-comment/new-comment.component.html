@@ -6,7 +6,12 @@
       'background-image': 'url(' + authenticatedUser()?.avatarUrl + ')',
     }"
   ></div>
-  <form action="" [formGroup]="newCommentForm" class="flex-1">
+  <form
+    (keydown.enter)="onSubmit(); (false)"
+    [formGroup]="newCommentForm"
+    tabindex="0"
+    class="flex-1"
+  >
     <mat-form-field class="w-full" appearance="outline">
       <textarea
         #newCommentTextarea

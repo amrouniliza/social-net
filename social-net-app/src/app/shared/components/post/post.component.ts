@@ -29,6 +29,7 @@ import { NewCommentComponent } from '../new-comment/new-comment.component';
 })
 export class PostComponent {
   post = input.required<Post>();
+  postsLoading = input.required<boolean>();
   authenticatedUser = input.required<User | null>();
   readonly store = inject(Store);
   @ViewChild(NewCommentComponent) newCommentComponent!: NewCommentComponent;

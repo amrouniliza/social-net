@@ -26,10 +26,15 @@ export const selectPostCount = createSelector(selectPostState, (state) =>
 //   createSelector(selectAllPosts, (posts) => posts[id]);
 
 // select post loaded flag
-// export const selectPostLoaded = createSelector(
-//   selectPostState,
-//   (state) => state.loaded,
-// );
+export const selectPostLoaded = createSelector(
+  selectPostState,
+  (state) => state.loaded,
+);
+
+export const selectPostLoading = createSelector(
+  selectPostState,
+  (state) => state.isLoading,
+);
 
 // select post error
 // export const selectError = createSelector(

@@ -53,6 +53,7 @@
     <mat-divider class="w-full !mt-2 !mb-2"></mat-divider>
     <app-new-comment
       class="w-full"
+      [postsLoading]="postsLoading()"
       [authenticatedUser]="authenticatedUser()"
       [post]="post()"
     ></app-new-comment>

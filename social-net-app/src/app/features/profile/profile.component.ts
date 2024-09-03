@@ -17,7 +17,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { DateAgoPipe } from '../../shared/pipes/date-ago.pipe';
 import { PostComponent } from '../../shared/components/post/post.component';
 import { Store } from '@ngrx/store';
-import { selectAllPosts } from '../../store/posts/selectors/posts.selectors';
+import {
+  selectAllPosts,
+  selectPostLoading,
+} from '../../store/posts/selectors/posts.selectors';
 import { CommonModule } from '@angular/common';
 import { postsActions } from '../../store/posts/actions/posts.actions';
 import { selectUser } from '../../store/auth/selectors/auth.selectors';
@@ -49,8 +52,10 @@ export class ProfileComponent implements OnInit {
   authenticatedUser!: Signal<User | null>;
   profileUser!: Signal<User | null>;
   $posts!: Signal<Post[]>;
+  $postsLoading!: Signal<boolean>;
 
   ngOnInit(): void {
+    this.$postsLoading = this.#store.selectSignal(selectPostLoading);
     this.getAuthenticatedUser();
     this.getProfilePosts(this.consultedProfileId);
     if (this.consultedProfileId !== this.authenticatedUser()?.id) {

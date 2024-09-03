@@ -26,6 +26,7 @@
       @for (post of $posts(); track $index) {
         <app-post
           class="w-full"
+          [postsLoading]="$postsLoading()"
           [post]="post"
           [authenticatedUser]="authenticatedUser()"
         ></app-post>

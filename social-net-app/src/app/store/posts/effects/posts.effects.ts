@@ -133,6 +133,22 @@ export class PostsEffects {
     );
   });
 
+  commentPost$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(postsActions.commentPost),
+      switchMap(({ post, comment }) =>
+        this.postService.commentPost(post.id, comment).pipe(
+          map((comment) => {
+            return postsActions.commentPostSuccess({ post, comment });
+          }),
+          catchError((error) => {
+            return of(postsActions.commentPostFailure({ error }));
+          }),
+        ),
+      ),
+    );
+  });
+
   deletePost$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(postsActions.deletePost),

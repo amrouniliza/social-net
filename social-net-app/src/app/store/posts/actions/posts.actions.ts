@@ -1,5 +1,12 @@
 import { createAction, props } from '@ngrx/store';
-import { CreatePostDto, HttpError, Like, Post } from '../../../models';
+import {
+  Comment,
+  CreateCommentDto,
+  CreatePostDto,
+  HttpError,
+  Like,
+  Post,
+} from '../../../models';
 
 // prettier-ignore
 export enum PostActionTypes {
@@ -21,6 +28,9 @@ export enum PostActionTypes {
   UNLIKE_POST                  = '[Posts] Unlike Post',
   UNLIKE_POST_SUCCESS          = '[Posts] Unlike Post Success',
   UNLIKE_POST_FAILURE          = '[Posts] Unlike Post Failure',
+  COMMENT_POST                 = '[Posts] Comment Post',
+  COMMENT_POST_SUCCESS         = '[Posts] Comment Post Success',
+  COMMENT_POST_FAILURE         = '[Posts] Comment Post Failure',
   UPDATE_POST                  = '[Posts] Update Post',
   UPDATE_POST_SUCCESS          = '[Posts] Update Post Success',
   UPDATE_POST_FAILURE          = '[Posts] Update Post Failure',
@@ -131,6 +141,21 @@ export const unlikePostFailure = createAction(
   props<{ error: HttpError }>(),
 );
 
+export const commentPost = createAction(
+  PostActionTypes.COMMENT_POST,
+  props<{ post: Post; comment: CreateCommentDto }>(),
+);
+
+export const commentPostSuccess = createAction(
+  PostActionTypes.COMMENT_POST_SUCCESS,
+  props<{ post: Post; comment: Comment }>(),
+);
+
+export const commentPostFailure = createAction(
+  PostActionTypes.COMMENT_POST_FAILURE,
+  props<{ error: HttpError }>(),
+);
+
 export const deletePost = createAction(
   PostActionTypes.DELETE_POST,
   props<{ id: string }>(),
@@ -168,6 +193,9 @@ export const postsActions = {
   unlikePost,
   unlikePostSuccess,
   unlikePostFailure,
+  commentPost,
+  commentPostSuccess,
+  commentPostFailure,
   deletePost,
   deletePostSuccess,
   deletePostFailure,
