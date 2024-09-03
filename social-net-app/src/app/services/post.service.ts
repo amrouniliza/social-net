@@ -2,7 +2,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CreatePostDto, Like, Post } from '../models';
+import { Comment, CreatePostDto, Like, Post } from '../models';
+import { CreateCommentDto } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -78,5 +79,16 @@ export class PostService {
     return this.http.delete<void>(`${this.apiUrl}/${postId}/likes`, {
       withCredentials: true,
     });
+  }
+
+  commentPost(
+    postId: string,
+    createCommentDto: CreateCommentDto,
+  ): Observable<Comment> {
+    return this.http.post<Comment>(
+      `${this.apiUrl}/${postId}/comments`,
+      createCommentDto,
+      { withCredentials: true },
+    );
   }
 }
