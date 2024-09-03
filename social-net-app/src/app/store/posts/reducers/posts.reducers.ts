@@ -140,6 +140,23 @@ const _reducer = createReducer(
   on(postsActions.deletePostFailure, (state, { error }): State => {
     return { ...state, error, loaded: false, isLoading: false };
   }),
+  on(postsActions.deleteComment, (state): State => {
+    return { ...state, isLoading: true };
+  }),
+  on(postsActions.deleteCommentSuccess, (state, { post, comment }) => {
+    return adapter.updateOne(
+      {
+        id: post.id,
+        changes: {
+          comments: post.comments.filter((c) => c.id !== comment.id),
+        },
+      },
+      { ...state, isLoading: false, loaded: true },
+    );
+  }),
+  on(postsActions.deleteCommentFailure, (state, { error }): State => {
+    return { ...state, error, loaded: false, isLoading: false };
+  }),
 );
 
 export function reducer(state: State | undefined, action: Action) {

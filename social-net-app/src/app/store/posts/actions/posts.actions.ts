@@ -37,6 +37,9 @@ export enum PostActionTypes {
   DELETE_POST                  = '[Posts] Delete Post',
   DELETE_POST_SUCCESS          = '[Posts] Delete Post Success',
   DELETE_POST_FAILURE          = '[Posts] Delete Post Failure',
+  DELETE_COMMENT               = '[Posts] Delete Comment',
+  DELETE_COMMENT_SUCCESS       = '[Posts] Delete Comment Success',
+  DELETE_COMMENT_FAILURE       = '[Posts] Delete Comment Failure',
 }
 
 export const loadPosts = createAction(PostActionTypes.LOAD_POSTS);
@@ -171,6 +174,21 @@ export const deletePostFailure = createAction(
   props<{ error: HttpError }>(),
 );
 
+export const deleteComment = createAction(
+  PostActionTypes.DELETE_COMMENT,
+  props<{ post: Post; comment: Comment }>(),
+);
+
+export const deleteCommentSuccess = createAction(
+  PostActionTypes.DELETE_COMMENT_SUCCESS,
+  props<{ post: Post; comment: Comment }>(),
+);
+
+export const deleteCommentFailure = createAction(
+  PostActionTypes.DELETE_COMMENT_FAILURE,
+  props<{ error: HttpError }>(),
+);
+
 export const postsActions = {
   loadPosts,
   loadPostsSuccess,
@@ -199,4 +217,7 @@ export const postsActions = {
   deletePost,
   deletePostSuccess,
   deletePostFailure,
+  deleteComment,
+  deleteCommentSuccess,
+  deleteCommentFailure,
 };

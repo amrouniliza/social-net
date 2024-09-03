@@ -91,4 +91,13 @@ export class PostService {
       { withCredentials: true },
     );
   }
+
+  deleteComment(commentId: string): Observable<void> {
+    return this.http.delete<void>(
+      `http://localhost:3000/comments/${commentId}`,
+      {
+        withCredentials: true,
+      },
+    );
+  }
 }

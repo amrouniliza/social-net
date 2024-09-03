@@ -164,4 +164,20 @@ export class PostsEffects {
       ),
     );
   });
+
+  deleteComment$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(postsActions.deleteComment),
+      switchMap(({ post, comment }) =>
+        this.postService.deleteComment(comment.id).pipe(
+          map(() => {
+            return postsActions.deleteCommentSuccess({ post, comment });
+          }),
+          catchError((error) => {
+            return of(postsActions.deleteCommentFailure({ error }));
+          }),
+        ),
+      ),
+    );
+  });
 }

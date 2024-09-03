@@ -1,6 +1,6 @@
 <div class="flex gap-2">
   <div
-    class="bg-center bg-contain"
+    class="bg-center bg-contain border-2"
     mat-card-avatar
     [ngStyle]="{
       'background-image': 'url(' + comment().author.avatarUrl + ')',
@@ -19,4 +19,7 @@
       {{ comment().createdAt | dateAgo }}
     </div>
   </div>
+  <button mat-icon-button (click)="deleteComment()">
+    <mat-icon color="warn">delete</mat-icon>
+  </button>
 </div>
