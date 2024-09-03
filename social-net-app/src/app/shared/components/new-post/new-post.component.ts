@@ -21,6 +21,7 @@ export class NewPostComponent {
   openNewPostDialog() {
     this.dialog.open<NewPostModalComponent>(NewPostModalComponent, {
       width: '50%',
+      data: this.profileUser(),
     });
   }
 }

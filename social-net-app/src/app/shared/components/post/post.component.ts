@@ -50,6 +50,8 @@ export class PostComponent {
       block: 'center',
       behavior: 'smooth',
     });
-    this.newCommentComponent.newCommentTextarea.nativeElement.focus();
+    this.newCommentComponent.newCommentTextarea.nativeElement.focus({
+      preventScroll: true,
+    });
   }
 }
