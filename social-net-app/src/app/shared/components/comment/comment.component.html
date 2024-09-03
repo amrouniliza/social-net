@@ -1,0 +1,17 @@
+<div class="flex gap-2">
+  <div
+    class="bg-center bg-contain"
+    mat-card-avatar
+    [ngStyle]="{
+      'background-image': 'url(' + comment().author.avatarUrl + ')',
+    }"
+  ></div>
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-subtitle>
+        {{ comment().author.username }}
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>{{ comment().content }}</mat-card-content>
+  </mat-card>
+</div>

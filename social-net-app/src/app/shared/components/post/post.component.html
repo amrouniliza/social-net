@@ -20,14 +20,14 @@
       />
     }
   </mat-card-content>
-  <mat-card-actions class="!flex-col">
+  <mat-card-actions class="!flex-col !p-5">
     <div class="flex items-center gap-1 w-full">
       @if (post().likes.length) {
         <mat-icon>favorite</mat-icon>
         <div>{{ post().likes.length }}</div>
       }
     </div>
-    <mat-divider class="w-full"></mat-divider>
+    <mat-divider class="w-full !mt-2 !mb-2"></mat-divider>
     <div class="w-full flex justify-evenly">
       <button
         mat-button
@@ -42,5 +42,13 @@
         Comment
       </button>
     </div>
+    @if (post().comments.length > 0) {
+      <mat-divider class="w-full !mt-2 !mb-2"></mat-divider>
+      <div class="w-full flex flex-col gap-4 mt-2">
+        @for (comment of post().comments; track $index) {
+          <app-comment [comment]="comment"> ></app-comment>
+        }
+      </div>
+    }
   </mat-card-actions>
 </mat-card>

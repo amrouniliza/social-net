@@ -4,7 +4,13 @@ import { Post } from './post.model';
 export interface CreatePostDto
   extends Omit<
     Post,
-    'id' | 'author' | 'createdAt' | 'imageUrl' | 'likes' | 'hasUserLiked'
+    | 'id'
+    | 'author'
+    | 'createdAt'
+    | 'imageUrl'
+    | 'likes'
+    | 'hasUserLiked'
+    | 'comments'
   > {
   authorId: string;
   imageFile: File;

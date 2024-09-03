@@ -71,7 +71,9 @@ export class PostsService {
           user: true,
           post: true
         },
-        comments: true
+        comments: {
+          author: true
+        }
       },
     });
     if (posts.length === 0) {

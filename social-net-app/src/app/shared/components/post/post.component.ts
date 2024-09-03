@@ -8,6 +8,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { Store } from '@ngrx/store';
 import { postsActions } from '../../../store/posts/actions/posts.actions';
+import { CommentComponent } from '../comment/comment.component';
 
 @Component({
   selector: 'app-post',
@@ -19,6 +20,7 @@ import { postsActions } from '../../../store/posts/actions/posts.actions';
     CommonModule,
     MatDividerModule,
     MatButtonModule,
+    CommentComponent,
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
