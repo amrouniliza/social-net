@@ -1,5 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import {
+  Component,
+  inject,
+  Injector,
+  Input,
+  OnInit,
+  runInInjectionContext,
+  Signal,
+} from '@angular/core';
 import { Post, User } from '../../models';
 import { Observable } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
@@ -16,6 +23,7 @@ import { CommonModule } from '@angular/common';
 import { postsActions } from '../../store/posts/actions/posts.actions';
 import { selectUser } from '../../store/auth/selectors/auth.selectors';
 import { UserService } from '../../services/user.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-profile',
@@ -35,43 +43,38 @@ import { UserService } from '../../services/user.service';
   styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit {
-  loggedInUser$!: Observable<User | null>;
-  loggedInUser!: User;
-  profileUser!: User;
+  #userService = inject(UserService);
+  #store = inject(Store);
+  #injector = inject(Injector);
+  @Input() consultedProfileId!: string;
+  authenticatedUser!: Signal<User | null>;
+  profileUser!: Signal<User | null>;
   posts$!: Observable<Post[]>;
-  consultedProfileId!: string;
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private userService: UserService,
-    private store: Store,
-  ) {}
 
   ngOnInit(): void {
-    this.getRegisteredUser();
-    this.activatedRoute.params.subscribe((params: Params) => {
-      this.consultedProfileId = params['userId'];
-    });
+    this.getAuthenticatedUser();
     this.getProfilePosts(this.consultedProfileId);
-    if (this.consultedProfileId === this.loggedInUser.id) {
+    if (this.consultedProfileId !== this.authenticatedUser()?.id) {
       this.getUserProfile(this.consultedProfileId);
     } else {
-      this.profileUser = this.loggedInUser;
+      this.profileUser = this.authenticatedUser;
     }
   }
 
-  getRegisteredUser() {
-    this.loggedInUser$ = this.store.select(selectUser);
-    this.loggedInUser$.subscribe((user) => (this.loggedInUser = user!));
+  getAuthenticatedUser() {
+    this.authenticatedUser = this.#store.selectSignal(selectUser);
   }
 
   getUserProfile(id: string) {
-    this.userService.getUser(id).subscribe({
-      next: (user) => (this.profileUser = user),
+    runInInjectionContext(this.#injector, () => {
+      this.profileUser = toSignal(this.#userService.getUser(id), {
+        initialValue: null,
+      });
     });
   }
 
   getProfilePosts(userId: string) {
-    this.store.dispatch(postsActions.loadPostsByAuthor({ authorId: userId }));
-    this.posts$ = this.store.select(selectAllPosts);
+    this.#store.dispatch(postsActions.loadPostsByAuthor({ authorId: userId }));
+    this.posts$ = this.#store.select(selectAllPosts);
   }
 }

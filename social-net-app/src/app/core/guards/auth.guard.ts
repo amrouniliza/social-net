@@ -10,6 +10,7 @@ export const authGuard: CanActivateFn = () => {
   return authService.isLogged.pipe(
     take(1),
     map((isLogged) => (isLogged ? true : false)),
-    tap((isLogged) => !isLogged && router.navigate(['/login'])),
+    // tap((isLogged) => !isLogged && router.navigate(['/login'])),
+    tap((isLogged) => console.log(isLogged)),
   );
 };

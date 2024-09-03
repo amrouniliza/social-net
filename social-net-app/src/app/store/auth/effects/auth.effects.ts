@@ -66,7 +66,8 @@ export class AuthEffects {
     () => {
       return this.actions$.pipe(
         ofType(AuthActionTypes.AUTH_SUCCESS),
-        tap(() => this.router.navigate(['home'])),
+        // tap(() => this.router.navigate(['home'])),
+        tap(() => console.log('auth success')),
       );
     },
     { dispatch: false },

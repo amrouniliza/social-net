@@ -15,6 +15,9 @@ export enum PostActionTypes {
   CREATE_POST                  = '[Posts] Create Post',
   CREATE_POST_SUCCESS          = '[Posts] Create Post Success',
   CREATE_POST_FAILURE          = '[Posts] Create Post Failure',
+  LIKE_POST                    = '[Posts] Like Post',
+  LIKE_POST_SUCCESS            = '[Posts] Like Post Success',
+  LIKE_POST_FAILURE            = '[Posts] Like Post Failure',
   UPDATE_POST                  = '[Posts] Update Post',
   UPDATE_POST_SUCCESS          = '[Posts] Update Post Success',
   UPDATE_POST_FAILURE          = '[Posts] Update Post Failure',
@@ -95,6 +98,21 @@ export const updatePostFailure = createAction(
   props<{ error: HttpError }>(),
 );
 
+export const likePost = createAction(
+  PostActionTypes.LIKE_POST,
+  props<{ id: string }>(),
+);
+
+export const likePostSuccess = createAction(
+  PostActionTypes.LIKE_POST_SUCCESS,
+  props<{ id: string }>(),
+);
+
+export const likePostFailure = createAction(
+  PostActionTypes.LIKE_POST_FAILURE,
+  props<{ error: HttpError }>(),
+);
+
 export const deletePost = createAction(
   PostActionTypes.DELETE_POST,
   props<{ id: string }>(),
@@ -126,6 +144,9 @@ export const postsActions = {
   updatePost,
   updatePostSuccess,
   updatePostFailure,
+  likePost,
+  likePostSuccess,
+  likePostFailure,
   deletePost,
   deletePostSuccess,
   deletePostFailure,

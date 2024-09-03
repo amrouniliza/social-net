@@ -1,13 +1,11 @@
 <mat-card class="w-1/2 mx-auto mb-6">
   <mat-card-content class="!flex gap-4">
-    @if (loggedInUser$ | async; as user) {
-      <div
-        class="w-10 aspect-square bg-red-500 rounded-full border-2 bg-center bg-contain"
-        [ngStyle]="{
-          'background-image': 'url(' + user.avatarUrl + ')',
-        }"
-      ></div>
-    }
+    <div
+      class="w-10 aspect-square bg-red-500 rounded-full border-2 bg-center bg-contain"
+      [ngStyle]="{
+        'background-image': 'url(' + profileUser()?.avatarUrl + ')',
+      }"
+    ></div>
     <button
       mat-stroked-button
       class="flex-1 !justify-start"

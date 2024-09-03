@@ -2,25 +2,25 @@
   <div
     class="h-1/4 w-full bg-black flex justify-center items-center"
     [ngStyle]="{
-      'background-image': 'url(' + loggedInUser.backgroundUrl + ')',
+      'background-image': 'url(' + profileUser()?.backgroundUrl + ')',
     }"
   >
     <div class="flex flex-col items-center gap-2">
       <div
         class="h-20 w-20 bg-red-500 rounded-full border-2 bg-center bg-contain"
         [ngStyle]="{
-          'background-image': 'url(' + loggedInUser.avatarUrl + ')',
+          'background-image': 'url(' + profileUser()?.avatarUrl + ')',
         }"
       ></div>
       <div class="text-white backdrop-blur p-1">
-        {{ loggedInUser.username }}
+        {{ profileUser()?.username }}
       </div>
-      <div class="text-white backdrop-blur p-1">{{ loggedInUser.email }}</div>
+      <div class="text-white backdrop-blur p-1">{{ profileUser()?.email }}</div>
     </div>
   </div>
   <div class="grow pt-6">
     <!-- What's on your mind component -->
-    <app-new-post [loggedInUser$]="loggedInUser$"></app-new-post>
+    <app-new-post [profileUser]="profileUser"></app-new-post>
 
     <div class="flex flex-col items-center w-1/2 gap-4 m-auto">
       @for (post of posts$ | async; track $index) {

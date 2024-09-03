@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CreatePostDto, Post } from '../models';
+import { CreatePostDto, Like, Post } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -40,7 +40,7 @@ export class PostService {
   }
 
   getPosts(): Observable<any> {
-    return this.http.get<Post[]>(`${this.apiUrl}`, {
+    return this.http.get<any>(`${this.apiUrl}`, {
       withCredentials: true,
     });
   }
@@ -62,6 +62,20 @@ export class PostService {
 
   deletePost(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, {
+      withCredentials: true,
+    });
+  }
+
+  likePost(postId: string): Observable<Like> {
+    return this.http.post<Like>(
+      `${this.apiUrl}/${postId}/likes`,
+      {},
+      { withCredentials: true },
+    );
+  }
+
+  unlikePost(postId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${postId}/likes`, {
       withCredentials: true,
     });
   }

@@ -1,11 +1,10 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, Signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NewPostModalComponent } from './new-post-modal/new-post-modal.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { User } from '../../../models';
 import { CommonModule } from '@angular/common';
-import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-new-post',
@@ -17,7 +16,7 @@ import { Observable, of } from 'rxjs';
 export class NewPostComponent {
   readonly dialog = inject(MatDialog);
   @Input()
-  loggedInUser$: Observable<User | null> = of(null);
+  profileUser!: Signal<User | null>;
 
   openNewPostDialog() {
     this.dialog.open<NewPostModalComponent>(NewPostModalComponent, {

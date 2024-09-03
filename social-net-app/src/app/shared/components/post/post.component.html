@@ -22,7 +22,9 @@
   </mat-card-content>
   <mat-card-actions>
     <button mat-icon-button>
-      <mat-icon>favorite</mat-icon>
+      @if (post().hasUserLiked) {
+        <mat-icon>favorite</mat-icon>
+      }
     </button>
   </mat-card-actions>
 </mat-card>

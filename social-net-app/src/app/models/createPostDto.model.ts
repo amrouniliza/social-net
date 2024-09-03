@@ -2,7 +2,10 @@ import { FormControl } from '@angular/forms';
 import { Post } from './post.model';
 
 export interface CreatePostDto
-  extends Omit<Post, 'id' | 'author' | 'createdAt' | 'imageUrl'> {
+  extends Omit<
+    Post,
+    'id' | 'author' | 'createdAt' | 'imageUrl' | 'likes' | 'hasUserLiked'
+  > {
   authorId: string;
   imageFile: File;
   [key: string]: string | File;

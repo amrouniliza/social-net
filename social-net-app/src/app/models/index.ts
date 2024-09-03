@@ -4,3 +4,4 @@ export * from './createPostDto.model';
 export * from './post.model';
 export * from './credentials.model';
 export * from './http-error.model';
+export * from './like.model';

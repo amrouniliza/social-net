@@ -1,13 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { PostService } from '../../../services/post.service';
-import { catchError, map, of, switchMap } from 'rxjs';
+import { catchError, concatMap, map, mergeMap, of, switchMap, tap } from 'rxjs';
 import { postsActions } from '../actions/posts.actions';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class PostsEffects {
   private actions$ = inject(Actions);
   private postService = inject(PostService);
+  private store = inject(Store);
 
   loadPosts$ = createEffect(() => {
     return this.actions$.pipe(
@@ -31,10 +33,17 @@ export class PostsEffects {
   loadPostsByAuthor$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(postsActions.loadPostsByAuthor),
-      switchMap(({ authorId }) =>
+      mergeMap(({ authorId }) =>
         this.postService.getPostsByAuthor(authorId).pipe(
           map((posts) => {
-            return postsActions.loadPostsSuccess({ posts });
+            return postsActions.loadPostsSuccess({
+              posts: posts.map((post) => ({
+                ...post,
+                hasUserLiked: post.likes.some(
+                  (like) => like.user.id === authorId,
+                ),
+              })),
+            });
           }),
           catchError((error) => {
             return of(postsActions.loadPostsFailure({ error }));
@@ -86,6 +95,22 @@ export class PostsEffects {
           }),
           catchError((error) => {
             return of(postsActions.updatePostFailure({ error }));
+          }),
+        ),
+      ),
+    );
+  });
+
+  likePost$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(postsActions.likePost),
+      switchMap(({ id }) =>
+        this.postService.likePost(id).pipe(
+          map(() => {
+            return postsActions.likePostSuccess({ id });
+          }),
+          catchError((error) => {
+            return of(postsActions.likePostFailure({ error }));
           }),
         ),
       ),

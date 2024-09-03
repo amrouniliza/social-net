@@ -10,11 +10,11 @@ export const routes: Routes = [
     path: 'login',
     component: LoginComponent,
   },
-  {
-    path: '',
-    redirectTo: '/home',
-    pathMatch: 'full',
-  },
+  // {
+  //   path: '',
+  //   redirectTo: '/home',
+  //   pathMatch: 'full',
+  // },
   {
     path: 'home',
     component: HomeComponent,
@@ -22,9 +22,9 @@ export const routes: Routes = [
     // data: {roles: ['ROLE_ADMIN','ROLE_USER']}
   },
   {
-    path: 'profile/:userId',
+    path: 'profile/:consultedProfileId',
     component: ProfileComponent,
-    canActivate: [authGuard],
+    // canActivate: [authGuard],
     // data: {roles: ['ROLE_ADMIN','ROLE_USER']}
   },
   {

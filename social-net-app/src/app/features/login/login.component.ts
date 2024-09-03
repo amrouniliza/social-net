@@ -71,7 +71,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.isLogged$ = this.authService.isLogged.subscribe({
       next: (isLogged) => {
         if (isLogged) {
-          this.router.navigate(['home']);
+          // this.router.navigate(['home']);
+          console.log('init login');
         }
       },
     });
