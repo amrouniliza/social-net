@@ -42,14 +42,10 @@ export class UsersController {
     { name: 'avatar', maxCount: 1 },
     { name: 'background', maxCount: 1 },
   ], multerConfig))
-  // @UseInterceptors(FileInterceptor('avatar', multerConfig))
-  // @UseInterceptors(FileInterceptor('background', multerConfig))
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
-    // @UploadedFile() avatar: Express.Multer.File,
-    // @UploadedFile() background: Express.Multer.File,
     @UploadedFiles() files: { avatar?: Express.Multer.File[], background?: Express.Multer.File[] }
   ): Promise<User> {
     return this.usersService.update(id, updateUserDto, files.avatar[0], files.background[0]);
